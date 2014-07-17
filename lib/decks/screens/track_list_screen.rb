@@ -4,7 +4,7 @@ module Decks
   class TrackListScreen
     class Presenter < DelegateClass(Configuration::Track)
       def filename
-        path ? truncate(name) : nil
+        path ? truncate(basename) : nil
       end
 
       def artist
@@ -21,6 +21,8 @@ module Decks
 
       private
       def truncate(string, length = 16)
+        string = string.to_s
+
         if string.length > 16
           "#{string[0, length]}..."
         else

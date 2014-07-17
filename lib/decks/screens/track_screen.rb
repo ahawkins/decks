@@ -5,7 +5,7 @@ module Decks
 
     class Presenter < DelegateClass(Configuration::Track)
       def file
-        name ? name : 'N/A'
+        path ? basename.to_s : 'N/A'
       end
 
       def title

@@ -58,12 +58,12 @@ module Decks
 
       assert_equal 2, release.tracks.size
 
-      assert_equal release.path.join('01-test.mp3').to_s, release[0].path
+      assert_equal release.path.join('01-test.mp3'), release[0].path
       assert_equal 'Arnej', release[0].artist
       assert_equal 'They Always Come Back (Original Mix)', release[0].title
       assert_equal 1, release[0].number
 
-      assert_equal release.path.join('02-continuous_mix.mp3').to_s, release[1].path
+      assert_equal release.path.join('02-continuous_mix.mp3'), release[1].path
       assert_equal 'VA', release[1].artist
       assert_equal 'Continuous Mix (Mixed by Markus Schulz)', release[1].title
       assert_equal 2, release[1].number
@@ -102,7 +102,7 @@ module Decks
 
       assert_equal 1, release.tracks.size
 
-      assert_equal release.path.join('02-file2.mp3').to_s, release[0].path
+      assert_equal release.path.join('02-file2.mp3'), release[0].path
     end
   end
 end
