@@ -20,20 +20,7 @@ module Decks
       end
 
       config.tracks.each do |track|
-        write_tags track do |tags|
-          tags.track = track.number
-          tags.total_tracks = config.tracks.size
-
-          tags.title = track.title
-          tags.artist = track.artist
-
-          tags.album = config.name
-          tags.album_artist = artist_names
-
-          tags.year = config.year
-
-          tags.compilation = config.compilation?
-        end
+        write_tags track
 
         track_basename = ('%02d-%s-%s-%s' % [
           track.number,
@@ -48,7 +35,7 @@ module Decks
         track.path = new_path
 
         if track.cue?
-          File.open path.join("#{track_basename}.cue"), 'w' do |cue|
+          File.open track.cue_path, 'w' do |cue|
             cue << track.cue
           end
         end
@@ -74,8 +61,19 @@ module Decks
     end
 
     def write_tags(track)
-      AudioFile.new(track.path) do |tags|
-        yield tags
+      AudioFile.new track.path do |tags|
+        tags.track = track.number
+        tags.total_tracks = config.tracks.size
+
+        tags.title = track.title
+        tags.artist = track.artist
+
+        tags.album = config.name
+        tags.album_artist = artist_names
+
+        tags.year = config.year
+
+        tags.compilation = config.compilation?
       end
     end
 

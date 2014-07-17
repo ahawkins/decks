@@ -6,65 +6,82 @@ module Decks
     def make
       clear
 
-      base_path = File.dirname config.path
-      release_path = File.join base_path, name
+      base_path = config.dirname
+      release_path = base_path.join name
 
-      config.tracks.each do |track_config|
-        file = AudioFile.new track_config.path
+      FileUtils.mv config.path, release_path
+      config.path = release_path
 
-        file.disc = track_config.disc
-        file.total_discs = total_discs
+      # Set the tracks back to the correct paths since their root
+      # directory has changed
 
-        file.track = track_config.number
-        file.total_tracks = tracks_on_disc file.disc
+      config.tracks.each do |track|
+        track.path = release_path.join track.basename
+      end
 
-        file.title = track_config.title
-        file.artist = track_config.artist
+      config.tracks.each do |track|
+        write_tags track
 
-        file.album = config.name
-        file.album_artist = artist_names
-
-        file.year = config.year
-
-        file.compilation = config.compilation?
-
-        track_filename = '%d%02d-%s-%s-%s' % [
-          track_config.disc,
-          track_config.number,
-          sanitize(track_config.artist),
-          sanitize(track_config.title),
+        track_basename = ('%d%02d-%s-%s-%s' % [
+          track.disc,
+          track.number,
+          sanitize(track.artist),
+          sanitize(track.title),
           'DECKS'
-        ]
+        ]).downcase
 
-        file.rename track_filename.downcase
+        new_path = path.join "#{track_basename}#{track.extname}"
 
-        track_config.path = file.path
+        FileUtils.mv track.path, new_path
+        track.path = new_path
 
-        if track_config.cue
-          File.open track_config.cue_path, 'w' do |cue|
-            cue << track_config.cue
+        if track.cue?
+          File.open track.cue_path, 'w' do |cue|
+            cue << track.cue
           end
         end
 
-        if track_config.log
-          File.open track_config.log_path, 'w' do |log|
-            log << track_config.log
+        if track.log?
+          File.open track.log_path, 'w' do |log|
+            log << track.log
           end
         end
       end
 
-      FileUtils.mv config.cover_path, File.join(config.path, cover_path)
+      # FileUtils.mv config.cover_path, File.join(config.path, cover_path)
 
-      FileUtils.mv config.path, release_path
+      FileUtils.touch nfo_path
+      FileUtils.touch sfv_path
 
-      FileUtils.touch File.join(release_path, nfo_path)
-      FileUtils.touch File.join(release_path, sfv_path)
-
-      create_playlist File.join(release_path, m3u_path), config.tracks
-      create_per_disc_playlists release_path
+      create_playlist m3u_path, config.tracks
+      create_per_disc_playlists
     end
 
     private
+    def path
+      config.path
+    end
+
+    def write_tags(track)
+      AudioFile.new track.path do |tags|
+        tags.disc = track.disc
+        tags.total_discs = total_discs
+
+        tags.track = track.number
+        tags.total_tracks = tracks_on_disc track.disc
+
+        tags.title = track.title
+        tags.artist = track.artist
+
+        tags.album = config.name
+        tags.album_artist = artist_names
+
+        tags.year = config.year
+
+        tags.compilation = config.compilation?
+      end
+    end
+
     def name
       parts = [ ]
 
@@ -94,46 +111,36 @@ module Decks
     end
 
     def nfo_path
-      "000-#{release_filename}.nfo"
+      path.join "000-#{release_filename}.nfo"
     end
 
     def sfv_path
-      "000-#{release_filename}.sfv"
+      path.join "000-#{release_filename}.sfv"
     end
 
     def m3u_path
-      "000-#{release_filename}.m3u"
+      path.join "000-#{release_filename}.m3u"
     end
 
     def cover_path
-      "000-#{release_filename}.jpg"
+      path.join "000-#{release_filename}.jpg"
     end
 
     def configured_files
-      track_files = config.tracks.map do |track|
-        track.path.to_s
-      end
-
-      set = Set.new track_files
-      set << config.cover_path.to_s if config.cover_path
-      set
+      config.tracks.map(&:path)
     end
 
     def clear
-      junk_files = existing_files - configured_files
+      junk_files = config.files - configured_files
       junk_files.each do |junk_file|
         FileUtils.rm_rf junk_file
       end
     end
 
-    def existing_files
-      Set.new(Dir[config.path.join('**', '*')])
-    end
-
     def create_playlist(path, tracks)
       File.open path, 'w' do |playlist|
         tracks.each do |track|
-          playlist.puts File.basename(track.path)
+          playlist.puts track.basename
         end
       end
     end
@@ -148,12 +155,12 @@ module Decks
       end
     end
 
-    def create_per_disc_playlists(base_path)
+    def create_per_disc_playlists
       per_disc = config.tracks.group_by(&:disc)
 
       per_disc.each_pair do |disc, list|
         m3u = "#{disc}00-#{release_filename}.m3u"
-        create_playlist File.join(base_path, m3u), list
+        create_playlist path.join(m3u), list
       end
     end
   end

@@ -15,12 +15,24 @@ module Decks
         !!cue
       end
 
+      def log?
+        !!log
+      end
+
       def basename
         path.basename
       end
 
       def extname
         path.extname
+      end
+
+      def cue_path
+        path.sub /\.(mp3|flac)$/, '.cue'
+      end
+
+      def log_path
+        path.sub /\.(mp3|flac)$/, '.log'
       end
     end
 
