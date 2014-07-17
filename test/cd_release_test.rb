@@ -42,7 +42,7 @@ module Decks
         release.catalogue_number = 'CH238'
         release.format = 'cd'
         release.cover 'cover'
-        release.compilation = true
+        release.compilation = false
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.disc = 1
@@ -74,7 +74,36 @@ module Decks
 
       assert_equal release.year, mp3.year
 
-      assert mp3.compilation?, 'Compilation metadata should be set'
+      refute mp3.compilation?, 'Should not be a compilation'
+    end
+
+    def test_compilation_release_are_named_va
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.catalogue_number = 'CH238'
+        release.format = 'CD'
+        release.cover 'cover'
+        release.compilation = true
+        release.track 'fixture1.mp3' do |track|
+          track.number = 1
+          track.disc = 1
+          track.title = 'Title'
+          track.artist = 'Artist'
+        end
+      end
+
+      release.release!
+
+      release_directory = scratch_path.join 'VA-City_Series-CD-(CH238)-2010-DECKS'
+      assert_directory release_directory
+
+      assert_release_file release_directory, '101-artist-title-decks.mp3'
+
+      mp3 = AudioFile.new File.join(release_directory, '101-artist-title-decks.mp3')
+
+      assert mp3.compilation?, 'Compilation tag should be set'
     end
 
     def test_writes_a_cue_file_for_tracks
@@ -85,7 +114,6 @@ module Decks
         release.catalogue_number = 'CH238'
         release.format = 'cd'
         release.cover 'cover'
-        release.compilation = true
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.disc = 1
@@ -115,7 +143,6 @@ module Decks
         release.catalogue_number = 'CH238'
         release.format = 'cd'
         release.cover 'cover'
-        release.compilation = true
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.disc = 1
@@ -145,7 +172,6 @@ module Decks
         release.catalogue_number = 'CH238'
         release.format = 'cd'
         release.cover 'cover'
-        release.compilation = true
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.disc = 1
@@ -232,7 +258,6 @@ module Decks
         release.artist = 'Markus Schulz'
         release.name = 'City Series'
         release.year = 2010
-        release.compilation = false
         release.format = 'cd'
         release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
@@ -262,7 +287,6 @@ module Decks
         release.artist = 'Markus Schulz'
         release.name = 'City Series'
         release.year = 2010
-        release.compilation = false
         release.format = 'cd'
         release.cover 'cover'
         release.track 'fixture1.mp3' do |track|

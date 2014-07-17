@@ -80,7 +80,8 @@ module Decks
     def name
       parts = [ ]
 
-      parts << artist_names
+      parts << (compilation? ? 'VA' : artist_names)
+
       parts << config.name
 
       yield parts if block_given?
@@ -172,6 +173,10 @@ module Decks
           playlist.puts track.basename
         end
       end
+    end
+
+    def compilation?
+      config.compilation?
     end
   end
 end

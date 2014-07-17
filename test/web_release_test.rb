@@ -41,7 +41,7 @@ module Decks
         release.catalogue_number = 'CH238'
         release.format = 'web'
         release.cover 'cover'
-        release.compilation = true
+        release.compilation = false
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -69,7 +69,35 @@ module Decks
 
       assert_equal release.year, mp3.year
 
-      assert mp3.compilation?, 'Compilation metadata should be set'
+      refute mp3.compilation?, 'Compilation tag should not be set'
+    end
+
+    def test_compilation_release_are_named_va
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.catalogue_number = 'CH238'
+        release.format = 'web'
+        release.cover 'cover'
+        release.compilation = true
+        release.track 'fixture1.mp3' do |track|
+          track.number = 1
+          track.title = 'Title'
+          track.artist = 'Artist'
+        end
+      end
+
+      release.release!
+
+      release_directory = scratch_path.join 'VA-City_Series-WEB-(CH238)-2010-DECKS'
+      assert_directory release_directory
+
+      assert_release_file release_directory, '01-artist-title-decks.mp3'
+
+      mp3 = AudioFile.new File.join(release_directory, '01-artist-title-decks.mp3')
+
+      assert mp3.compilation?, 'Compilation tag should be set'
     end
 
     def test_handles_multiple_artist_releases

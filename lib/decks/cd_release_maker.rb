@@ -85,7 +85,7 @@ module Decks
     def name
       parts = [ ]
 
-      parts << artist_names
+      parts << (compilation? ? 'VA' : artist_names)
       parts << config.name
 
       yield parts if block_given?
@@ -162,6 +162,10 @@ module Decks
         m3u = "#{disc}00-#{release_filename}.m3u"
         create_playlist path.join(m3u), list
       end
+    end
+
+    def compilation?
+      config.compilation?
     end
   end
 end

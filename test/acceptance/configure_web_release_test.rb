@@ -20,7 +20,7 @@ module Decks
       UI.start release, StringIO.new, ScriptedInput.new(commands)
     end
 
-    def test_can_configure_a_simple_web_release
+    def test_can_configure_a_compilation_web_release
       release = configure 'acceptance_test' do |release|
         release.format = 'WEB'
         release.mp3 '01-test'
@@ -69,6 +69,49 @@ module Decks
       assert_equal 'Continuous Mix (Mixed by Markus Schulz)', release[1].title
       assert_equal 2, release[1].number
       assert release[1].mixed?
+
+      assert_directory scratch_path.join('VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-(CH005)-2008-DECKS')
+    end
+
+    def test_can_configure_an_album_web_release
+      release = configure 'acceptance_test' do |release|
+        release.format = 'WEB'
+        release.mp3 '01-test'
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'L', 'Coldharbor',
+        '#', 'CH005',
+        'T',
+        'a', '1',
+        '1',
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
+      ])
+
+      assert_equal [ 'Markus Schulz' ], release.artists
+      assert_equal 'Without You Near', release.name
+      refute release.compilation?
+      assert_equal 2008, release.year
+      assert_equal 'Coldharbor', release.label
+      assert_equal 'CH005', release.catalogue_number
+
+      assert_equal 1, release.tracks.size
+
+      assert_equal 'Markus Schulz', release[0].artist
+      assert_equal 'Clear Blue (ft Elevation)', release[0].title
+      assert_equal 1, release[0].number
+      refute release[0].mixed?
+
+      assert_directory scratch_path.join('Markus_Schulz-Without_You_Near-WEB-(CH005)-2008-DECKS')
     end
 
     def test_can_configure_a_cue_file_for_a_track
