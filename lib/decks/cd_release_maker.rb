@@ -9,14 +9,16 @@ module Decks
       base_path = config.dirname
       release_path = base_path.join name
 
-      FileUtils.mv config.path, release_path
-      config.path = release_path
+      if config.path != release_path
+        FileUtils.mv config.path, release_path
+        config.path = release_path
 
-      # Set the tracks back to the correct paths since their root
-      # directory has changed
+        # Set the tracks back to the correct paths since their root
+        # directory has changed
 
-      config.tracks.each do |track|
-        track.path = release_path.join track.basename
+        config.tracks.each do |track|
+          track.path = release_path.join track.basename
+        end
       end
 
       config.tracks.each do |track|
@@ -32,8 +34,10 @@ module Decks
 
         new_path = path.join "#{track_basename}#{track.extname}"
 
-        FileUtils.mv track.path, new_path
-        track.path = new_path
+        if track.path != new_path
+          FileUtils.mv track.path, new_path
+          track.path = new_path
+        end
 
         if track.cue?
           File.open track.cue_path, 'w' do |cue|

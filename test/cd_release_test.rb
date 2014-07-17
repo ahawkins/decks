@@ -34,6 +34,28 @@ module Decks
       assert_release_file release_directory, '101-artist-title-decks.mp3'
     end
 
+    def test_can_be_released_twice
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.catalogue_number = 'CH238'
+        release.format = 'cd'
+        release.cover 'cover'
+        release.track 'cd1.mp3' do |track|
+          track.number = 1
+          track.disc = 1
+          track.title = 'Title'
+          track.artist = 'Artist'
+        end
+      end
+
+      2.times { release.release! }
+
+      release_directory = scratch_path.join 'Markus_Schulz-City_Series-CD-(CH238)-2010-DECKS'
+      assert_directory release_directory
+    end
+
     def test_track_information_is_written_into_metadata
       release = configure do |release|
         release.artist = 'Markus Schulz'
