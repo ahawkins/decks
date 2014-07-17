@@ -49,7 +49,8 @@ module Decks
         'n', '2',
         'b',
         'b',
-        'r'
+        'r',
+        'q'
       ])
 
       assert_equal [ 'Markus Schulz' ], release.artists

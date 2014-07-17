@@ -24,11 +24,16 @@ module Decks
         view.printf ' - %s', path.basename
       end
 
-      view.puts 'Press any key to continue...'
+      view.puts '(Q)uit or any key to continue...'
     end
 
-    def input(*)
-      goto next_step
+    def input(string)
+      case string.downcase
+      when 'q'
+        throw :done
+      else
+        goto next_step
+      end
     end
   end
 end
