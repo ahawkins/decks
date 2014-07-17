@@ -70,6 +70,8 @@ module Decks
         goto SetCatalogueNumberScreen.new(pipeline, self)
       when 't'
         goto TrackListScreen.new(pipeline, pipeline.tracks, self)
+      when 'r'
+        goto MakeReleaseScreen.new(pipeline, self)
       else
         unknown_command letter
       end

@@ -27,7 +27,6 @@ require_relative 'decks/cd_release_maker'
 require_relative 'decks/cd_release_validator'
 require_relative 'decks/web_release_validator'
 
-
 require_relative 'decks/ui'
 
 require_relative 'decks/ui/console'
@@ -58,6 +57,8 @@ require_relative 'decks/screens/set_year_screen'
 require_relative 'decks/screens/track_list_screen'
 require_relative 'decks/screens/track_screen'
 require_relative 'decks/screens/add_track_screen'
+
+require_relative 'decks/screens/make_release_screen'
 
 require_relative 'decks/screens/main_menu_screen'
 
