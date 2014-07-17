@@ -21,7 +21,7 @@ module Decks
       view.separator
 
       release.files.each do |path|
-        view.printf ' - %s', path
+        view.printf ' - %s', path.basename
       end
 
       view.puts 'Press any key to continue...'
