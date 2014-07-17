@@ -7,7 +7,11 @@ module Decks
 
       catch :done do
         loop do
-          router.input stdin.gets.strip
+          begin
+            router.input stdin.gets.strip
+          rescue Router::UnknownCommandError
+            router.loop
+          end
         end
       end
     end
