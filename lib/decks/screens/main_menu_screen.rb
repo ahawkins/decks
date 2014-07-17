@@ -14,6 +14,11 @@ module Decks
       view.printf '%s: %s', 'Directory', pipeline.basename
       view.printf '%s: %s', 'Format', pipeline.format
 
+      view.separator
+
+      view.puts "(Q)uit"
+      view.puts "(R)elase" unless problems?
+
       if problems?
         view.separator
         view.warn 'Cannot release yet!'
@@ -72,6 +77,8 @@ module Decks
         goto TrackListScreen.new(pipeline, pipeline.tracks, self)
       when 'r'
         goto MakeReleaseScreen.new(pipeline, self)
+      when 'q'
+        throw :done
       else
         unknown_command letter
       end

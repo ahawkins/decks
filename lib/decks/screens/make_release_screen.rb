@@ -12,6 +12,8 @@ module Decks
     end
 
     def draw(view)
+      view.flush
+
       view.header 'Release Created!'
 
       view.separator
@@ -23,6 +25,8 @@ module Decks
       release.files.each do |path|
         view.printf ' - %s', path.basename
       end
+
+      view.separator
 
       view.puts '(Q)uit or any key to continue...'
     end
