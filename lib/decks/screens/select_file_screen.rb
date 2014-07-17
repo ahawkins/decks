@@ -8,7 +8,7 @@ module Decks
     def entered
       @choices = { }
 
-      Dir[File.join(directory, files)].each_with_index do |file, i|
+      Dir[directory.join(files)].each_with_index do |file, i|
         choices[i+1] = file
       end
 
