@@ -5,15 +5,15 @@ module Decks
     attr_reader :path
 
     def initialize(path)
-      fail "#{path} doesn't exist!" unless File.exist? path
+      @path = Pathname.new path.to_s
 
-      @path = path
+      fail "#{path} doesn't exist!" unless @path.exist?
 
       yield self if block_given?
     end
 
     def to_s
-      path
+      path.to_s
     end
 
     def rename(base_name)
@@ -21,11 +21,7 @@ module Decks
       new_path = File.join directory, "#{base_name}.mp3"
       FileUtils.mv path, new_path
 
-      @path = new_path
-    end
-
-    def release
-      File.basename File.dirname(path)
+      @path = Pathname.new new_path
     end
 
     def artist

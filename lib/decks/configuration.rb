@@ -1,22 +1,26 @@
 module Decks
   class Configuration
-    Track = Struct.new :number, :disc, :title, :artist, :path, :cue, :log, :mixed do
+    Track = Struct.new :number, :disc, :title, :artist, :cue, :log, :mixed do
+      attr_reader :path
+
+      def path=(value)
+        @path = Pathname.new value
+      end
+
       def mixed?
         !!mixed
       end
 
-      def name
-        return unless path
-
-        File.basename path
+      def cue?
+        !!cue
       end
 
-      def cue_path
-        path.gsub /(mp3|flac)$/, 'cue'
+      def basename
+        path.basename
       end
 
-      def log_path
-        path.gsub /(mp3|flac)$/, 'log'
+      def extname
+        path.extname
       end
     end
 
@@ -61,11 +65,15 @@ module Decks
     attr_accessor :logs
 
     def initialize(path)
-      @path = path
+      @path = Pathname.new path.to_s
       @tracks = [ ]
       @artists = [ ]
       @cues = [ ]
       @logs = [ ]
+    end
+
+    def path=(value)
+      @path = Pathname.new value.to_s
     end
 
     def compilation?
@@ -81,7 +89,17 @@ module Decks
     end
 
     def basename
-      File.basename path
+      path.basename
+    end
+
+    def dirname
+      path.dirname
+    end
+
+    def files
+      Dir[path.join('**', '*.*')].map do |file|
+        Pathname.new file
+      end
     end
   end
 end
