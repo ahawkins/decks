@@ -11,7 +11,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -32,7 +31,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -55,7 +53,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -71,6 +68,29 @@ module Decks
       assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.nfo'
     end
 
+    def test_single_jpg_in_directory_is_used_for_cover
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.catalogue_number = 'CH238'
+        release.format = 'web'
+        release.image 'cover.jpg'
+        release.track 'fixture1.mp3' do |track|
+          track.number = 1
+          track.title = 'Title'
+          track.artist = 'Artist'
+        end
+      end
+
+      release.release!
+
+      release_directory = scratch_path.join 'Markus_Schulz-City_Series-WEB-(CH238)-2010-DECKS'
+      assert_directory release_directory
+
+      assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.jpg'
+    end
+
     def test_audio_files_are_named_number_artist_title_group
       release = configure do |release|
         release.artist = 'Markus Schulz'
@@ -78,7 +98,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.compilation = false
         release.track 'fixture1.mp3' do |track|
           track.number = 1
@@ -102,7 +121,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.compilation = false
         release.track 'fixture1.mp3' do |track|
           track.number = 1
@@ -141,7 +159,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.compilation = true
         release.track 'fixture1.mp3' do |track|
           track.number = 1
@@ -163,7 +180,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.compilation = true
         release.track 'fixture1.mp3' do |track|
           track.number = 1
@@ -202,7 +218,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Mixed'
@@ -238,7 +253,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Mixed'
@@ -274,7 +288,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Mixed'
@@ -299,7 +312,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Mixed'
@@ -334,7 +346,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Foo (Original Mix)'
@@ -352,37 +363,6 @@ module Decks
       refute_release_file release_directory, playlist_file
     end
 
-    # def test_follows_all_the_general_rules
-    #   release = configure do |release|
-    #     release.artist = 'Markus Schulz'
-    #     release.name = 'City Series'
-    #     release.year = 2010
-    #     release.catalogue_number = 'CH238'
-    #     release.format = 'web'
-    #     release.cover 'cover'
-    #     release.track 'fixture1.mp3' do |track|
-    #       track.number = 1
-    #       track.title = 'Title'
-    #       track.artist = 'Artist'
-    #     end
-    #   end
-    #
-    #   release.release!
-    #
-    #   release_directory = scratch_path.join 'Markus_Schulz-City_Series-WEB-(CH238)-2010-DECKS'
-    #   assert_directory release_directory
-    #
-    #   assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.nfo'
-    #   assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.sfv'
-    #   assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.m3u'
-    #
-    #   skip 'cover handling needed'
-    #
-    #   assert_release_file release_directory, '00-markus_schulz-city_series-web-(ch238)-2010-decks.jpg'
-    #
-    #   assert_release_file release_directory, '01-artist-title-decks.mp3'
-    # end
-
     def test_does_not_break_if_released_twice
       release = configure do |release|
         release.artist = 'Markus Schulz'
@@ -390,7 +370,7 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
+        release.image 'cover.jpg'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -411,7 +391,7 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
+        release.image 'cover.jpg'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -423,6 +403,11 @@ module Decks
 
       release_directory = scratch_path.join 'Fleming_and_Lawrence-City_Series-WEB-(CH238)-2010-DECKS'
       assert_directory release_directory
+
+      assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-2010-decks.nfo'
+      assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-2010-decks.sfv'
+      assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-2010-decks.m3u'
+      assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-2010-decks.jpg'
 
       assert_release_file release_directory, '01-artist-title-decks.mp3'
 
@@ -438,7 +423,7 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
+        release.image 'cover.jpg'
         release.lossless = true
         release.mp3 'fixture1' do |track|
           track.number = 1
@@ -455,10 +440,7 @@ module Decks
       assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-lossless-2010-decks.nfo'
       assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-lossless-2010-decks.sfv'
       assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-lossless-2010-decks.m3u'
-
-      skip 'Cover handling required'
-
-      assert_release_file release_directory, '00-markus_schulz-city_series-web-2010-decks.jpg'
+      assert_release_file release.path, '00-fleming_and_lawrence-city_series-web-(ch238)-lossless-2010-decks.jpg'
     end
 
     def test_catalogue_number_is_optional
@@ -468,7 +450,7 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
+        release.image 'cover.jpg'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Title'
@@ -484,9 +466,6 @@ module Decks
       assert_release_file release_directory, '00-markus_schulz-city_series-web-2010-decks.nfo'
       assert_release_file release_directory, '00-markus_schulz-city_series-web-2010-decks.sfv'
       assert_release_file release_directory, '00-markus_schulz-city_series-web-2010-decks.m3u'
-
-      skip 'Cover handling required'
-
       assert_release_file release_directory, '00-markus_schulz-city_series-web-2010-decks.jpg'
     end
 
@@ -497,7 +476,6 @@ module Decks
         release.year = 2010
         release.compilation = false
         release.format = 'web'
-        release.cover 'cover'
         release.track 'fixture1.mp3' do |track|
           track.number = 1
           track.title = 'Mixed'
@@ -526,7 +504,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'web'
-        release.cover 'cover'
         release.touch 'foo.txt'
         release.track 'fixture1.mp3' do |track|
           track.number = 1

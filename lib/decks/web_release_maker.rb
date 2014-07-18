@@ -51,6 +51,8 @@ module Decks
       end
 
       create_playlist m3u_path, config.tracks
+
+      config.cover.rename cover_path if config.cover?
     end
 
     private
@@ -139,7 +141,9 @@ module Decks
     end
 
     def configured_files
-      config.tracks.map(&:path)
+      list = config.tracks.map(&:path)
+      list << config.cover if config.cover?
+      list
     end
 
     def clear

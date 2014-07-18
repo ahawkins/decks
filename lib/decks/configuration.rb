@@ -117,5 +117,19 @@ module Decks
         Pathname.new file
       end
     end
+
+    def cover?
+      !!cover
+    end
+
+    def cover
+      return unless images.size == 1
+      images.first
+    end
+
+    private
+    def images
+      Pathname.glob path.join( '*.{jpg,jpeg}')
+    end
   end
 end

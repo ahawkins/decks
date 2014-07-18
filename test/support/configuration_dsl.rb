@@ -77,9 +77,8 @@ module Decks
       config.tracks << entry
     end
 
-    def cover(path)
-      config.cover_path = config.path.join "#{path}.jbg"
-      FileUtils.copy_file fixture_path.join('cover.jpg'), config.cover_path
+    def image(path)
+      FileUtils.copy_file fixture_path.join('cover.jpg'), config.path.join(path)
     end
 
     def touch(path, content = '')
