@@ -11,6 +11,10 @@ module Decks
         !!mixed
       end
 
+      def unmixed?
+        !mixed?
+      end
+
       def cue?
         !!cue
       end

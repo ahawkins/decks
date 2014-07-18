@@ -249,10 +249,11 @@ module Decks
           track.artist = 'VA'
           track.mixed = true
         end
-        release.mp3 'fixture2' do |track|
-          track.number = 1
+        release.track 'fixture2.mp3' do |track|
+          track.number = 2
           track.title = 'Unmixed'
           track.artist = 'Artist'
+          track.mixed = false
         end
       end
 
@@ -268,6 +269,31 @@ module Decks
 
       assert_equal 1, playlist.size
       assert_includes playlist, '01-va-mixed-decks.mp3'
+    end
+
+    def test_does_not_generate_a_mixed_playlist_if_all_tracks_are_mixed
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.compilation = false
+        release.format = 'web'
+        release.cover 'cover'
+        release.track 'fixture1.mp3' do |track|
+          track.number = 1
+          track.title = 'Mixed'
+          track.artist = 'VA'
+          track.mixed = true
+        end
+      end
+
+      release.release!
+
+      release_directory = scratch_path.join 'Markus_Schulz-City_Series-WEB-2010-DECKS'
+      assert_directory release_directory
+
+      playlist_file = '00-markus_schulz-city_series_(continuous_mixes)-web-2010-decks.m3u'
+      refute_release_file release_directory, playlist_file
     end
 
     def test_generates_a_playlist_of_unmixed_tracks
@@ -303,6 +329,31 @@ module Decks
 
       assert_equal 1, playlist.size
       assert_includes playlist, '02-artist-unmixed-decks.mp3'
+    end
+
+    def test_does_not_generate_an_unmixed_playlist_if_all_tracks_are_unmixed
+      release = configure do |release|
+        release.artist = 'Markus Schulz'
+        release.name = 'City Series'
+        release.year = 2010
+        release.compilation = false
+        release.format = 'web'
+        release.cover 'cover'
+        release.track 'fixture1.mp3' do |track|
+          track.number = 1
+          track.title = 'Foo (Original Mix)'
+          track.artist = 'Bar'
+          track.mixed = false
+        end
+      end
+
+      release.release!
+
+      release_directory = scratch_path.join 'Markus_Schulz-City_Series-WEB-2010-DECKS'
+      assert_directory release_directory
+
+      playlist_file = '00-markus_schulz-city_series_(unmixed)-web-2010-decks.m3u'
+      refute_release_file release_directory, playlist_file
     end
 
     def test_writes_a_cue_file_if_provided

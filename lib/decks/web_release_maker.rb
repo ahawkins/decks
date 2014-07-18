@@ -45,11 +45,8 @@ module Decks
       FileUtils.touch nfo_path
       FileUtils.touch sfv_path
 
-      if continuous_mixes?
+      if mixed_and_unmixed_tracks?
         create_playlist continuous_mixes_m3u_path, continuous_mixes
-      end
-
-      if unmixed_tracks?
         create_playlist unmixed_m3u_path, unmixed_tracks
       end
 
@@ -153,7 +150,7 @@ module Decks
     end
 
     def continuous_mixes
-      config.tracks.select(&:mixed?)
+      tracks.select(&:mixed?)
     end
 
     def continuous_mixes?
@@ -161,11 +158,11 @@ module Decks
     end
 
     def unmixed_tracks
-      config.tracks.reject(&:mixed?)
+      tracks.reject(&:mixed?)
     end
 
-    def unmixed_tracks?
-      unmixed_tracks.any?
+    def mixed_and_unmixed_tracks?
+      tracks.any?(&:mixed?) && tracks.any?(&:unmixed?)
     end
 
     def create_playlist(path, tracks)
@@ -178,6 +175,10 @@ module Decks
 
     def compilation?
       config.compilation?
+    end
+
+    def tracks
+      config.tracks
     end
   end
 end
