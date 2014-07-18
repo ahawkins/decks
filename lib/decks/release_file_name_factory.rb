@@ -2,7 +2,7 @@ module Decks
   class ReleaseFileNameFactory
     include SanitizationHelpers
 
-    include Concord.new(:release)
+    include Concord.new(:release, :prefix)
 
     def name(*tags)
       parts = [ ]
@@ -24,7 +24,7 @@ module Decks
     end
 
     def file(*tags)
-      name(*tags).downcase
+      "#{prefix}-#{name(*tags)}".downcase
     end
 
     def nfo
