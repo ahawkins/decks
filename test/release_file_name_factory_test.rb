@@ -120,7 +120,7 @@ module Decks
       assert_equal 'Artist-Album-(1234)-TAG1-TAG2-CD-LOSSLESS-2014-DECKS', factory.name(:tag1, :tag2)
     end
 
-    def test_filename_is_release_name_in_lowercase_with_prefix
+    def test_path_gives_a_pathname_with_the_name
       release = configure do |release|
         release.artist = 'Artist'
         release.name = 'Album'
@@ -130,22 +130,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name.downcase}", factory.file
-    end
-
-    def test_file_names_can_be_given_extra_tags
-      release = configure do |release|
-        release.artist = 'Artist'
-        release.name = 'Album'
-        release.year = 2014
-        release.format = 'CD'
-        release.lossless = true
-        release.catalogue_number = '1234'
-      end
-
-      factory = build release
-
-      assert_equal "00-#{factory.name('TAG').downcase}", factory.file('TAG')
+      assert_equal release.dirname.join('Artist-Album-CD-2014-DECKS'), factory.path
     end
 
     def test_can_generate_nfo_file_names
@@ -158,7 +143,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name.downcase}.nfo", factory.nfo
+      assert_equal factory.path.join("00-#{factory.name.downcase}.nfo"), factory.nfo
     end
 
     def test_can_generate_jpg_file_names
@@ -171,7 +156,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name.downcase}.jpg", factory.jpg
+      assert_equal factory.path.join("00-#{factory.name.downcase}.jpg"), factory.jpg
     end
 
     def test_can_generate_proof_jpg_file_names
@@ -184,7 +169,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name('PROOF').downcase}.jpg", factory.proof
+      assert_equal factory.path.join("00-#{factory.name('PROOF').downcase}.jpg"), factory.proof
     end
 
     def test_can_generate_sfv_file_names
@@ -197,7 +182,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name.downcase}.sfv", factory.sfv
+      assert_equal factory.path.join("00-#{factory.name.downcase}.sfv"), factory.sfv
     end
 
     def test_can_generate_m3u_file_names
@@ -210,7 +195,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name.downcase}.m3u", factory.m3u
+      assert_equal factory.path.join("00-#{factory.name.downcase}.m3u"), factory.m3u
     end
 
     def test_can_generate_unmixed_m3u_filenames
@@ -223,7 +208,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name('UNMIXED').downcase}.m3u", factory.unmixed_m3u
+      assert_equal factory.path.join("00-#{factory.name('UNMIXED').downcase}.m3u"), factory.unmixed_m3u
     end
 
     def test_can_generate_continuous_mixes_m3u_filenames
@@ -236,7 +221,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "00-#{factory.name('MIXED').downcase}.m3u", factory.mixed_m3u
+      assert_equal factory.path.join("00-#{factory.name('MIXED').downcase}.m3u"), factory.mixed_m3u
     end
   end
 end

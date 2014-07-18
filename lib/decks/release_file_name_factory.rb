@@ -23,39 +23,43 @@ module Decks
       parts.map { |part| sanitize(part) }.join('-')
     end
 
-    def file(*tags)
-      "#{prefix}-#{name(*tags)}".downcase
+    def path(*tags)
+      release.dirname.join name(*tags)
     end
 
     def nfo
-      "#{file}.nfo"
+      file :nfo
     end
 
     def sfv
-      "#{file}.sfv"
+      file :sfv
     end
 
     def jpg
-      "#{file}.jpg"
+      file :jpg
     end
 
     def proof
-      "#{file(:proof)}.jpg"
+      file :jpg, :proof
     end
 
     def m3u
-      "#{file}.m3u"
+      file :m3u
     end
 
     def mixed_m3u
-      "#{file(:mixed)}.m3u"
+      file :m3u, :mixed
     end
 
     def unmixed_m3u
-      "#{file(:unmixed)}.m3u"
+      file :m3u, :unmixed
     end
 
     private
+    def file(extension, *tags)
+      path.join "#{prefix}-#{name(*tags)}.#{extension}".downcase
+    end
+
     def compilation?
       release.compilation?
     end
