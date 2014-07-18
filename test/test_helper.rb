@@ -61,3 +61,4 @@ end
 require_relative 'support/configuration_dsl'
 require_relative 'support/screen_test_case'
 require_relative 'support/rules_test_case'
+require_relative 'support/packaging_tests'
