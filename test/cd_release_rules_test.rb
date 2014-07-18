@@ -157,6 +157,11 @@ module Decks
 
       assert_ok release
 
+      release[0].title = 'City Series presented by Foo'
+      release.name = 'City Series presented by Foo'
+
+      assert_ok release
+
       release.name = 'City Series'
 
       refute_ok release

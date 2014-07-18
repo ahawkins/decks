@@ -4,7 +4,7 @@ module Decks
 
     def initialize(release)
       super release
-      @errors = Set.new
+      @errors = [ ]
     end
 
     def valid?
@@ -57,8 +57,6 @@ module Decks
       end
 
       errors << 'Mixed on this compilation are not VA' if non_va
-
-      errors << 'Name does not include mix artists' unless name.to_s =~ mixed_regex
 
       artists.each do |artist|
         errors << "Name does not include #{artist}" unless name.include? artist
