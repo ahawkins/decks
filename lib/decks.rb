@@ -27,6 +27,8 @@ require_relative 'decks/cd_release_maker'
 require_relative 'decks/cd_release_validator'
 require_relative 'decks/web_release_validator'
 
+require_relative 'decks/release_file_name_factory'
+
 require_relative 'decks/ui'
 
 require_relative 'decks/ui/console'
