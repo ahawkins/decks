@@ -23,20 +23,14 @@ module Decks
         !!log
       end
 
+      def move(new_path)
+        return if new_path == path
+        path.rename new_path
+        @path = new_path
+      end
+
       def basename
         path.basename
-      end
-
-      def extname
-        path.extname
-      end
-
-      def cue_path
-        path.sub /\.(mp3|flac)$/, '.cue'
-      end
-
-      def log_path
-        path.sub /\.(mp3|flac)$/, '.log'
       end
     end
 
@@ -127,9 +121,24 @@ module Decks
       images.first
     end
 
+    # Move the directory and all referenced files inside that directory
+    def move(new_path)
+      return unless new_path != path
+
+      base_path = new_path.dirname
+
+      FileUtils.mv path, new_path
+
+      tracks.each do |track|
+        track.path = new_path.join track.basename
+      end
+
+      @path = new_path
+    end
+
     private
     def images
-      Pathname.glob path.join( '*.{jpg,jpeg}')
+      Pathname.glob path.join('*.{jpg,jpeg}')
     end
   end
 end

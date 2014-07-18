@@ -4,7 +4,7 @@ module Decks
 
     include Concord.new(:release, :prefix)
 
-    def name(*tags)
+    def name
       parts = [ ]
 
       parts << (compilation? ? 'VA' : artist_names)
@@ -12,8 +12,6 @@ module Decks
       parts << release.name
 
       parts << "(#{catalogue_number})" if catalogue_number?
-
-      parts = parts + tags.map { |t| t.to_s.upcase }
 
       parts << format.upcase
       parts << 'LOSSLESS' if lossless?
@@ -23,8 +21,8 @@ module Decks
       parts.map { |part| sanitize(part) }.join('-')
     end
 
-    def path(*tags)
-      release.dirname.join name(*tags)
+    def path
+      release.dirname.join name
     end
 
     def nfo
@@ -35,7 +33,7 @@ module Decks
       file :sfv
     end
 
-    def jpg
+    def cover
       file :jpg
     end
 
@@ -56,8 +54,10 @@ module Decks
     end
 
     private
-    def file(extension, *tags)
-      path.join "#{prefix}-#{name(*tags)}.#{extension}".downcase
+    def file(extension, tag = nil)
+      parts = [ prefix, name, tag ].compact
+
+      path.join "#{parts.join('-')}.#{extension}".downcase
     end
 
     def compilation?

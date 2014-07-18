@@ -32,6 +32,37 @@ module Decks
       builder.make
     end
 
+    def glob(match)
+      Pathname.glob dirname.join(match)
+    end
+
+    def grep(matcher)
+      files.find do |file|
+        file.to_s =~ matcher
+      end
+    end
+
+    # FIXME: I would like to better encapsulate the names of these files
+    def sfv
+      grep /\.sfv$/
+    end
+
+    def nfo
+      grep /\.nfo$/
+    end
+
+    def playlist
+      grep /decks\.m3u$/
+    end
+
+    def mixed_playlist
+      grep /decks-mixed\.m3u$/
+    end
+
+    def unmixed_playlist
+      grep /decks-unmixed\.m3u$/
+    end
+
     private
     def build_validator
       case format
