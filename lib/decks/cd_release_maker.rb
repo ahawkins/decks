@@ -52,13 +52,19 @@ module Decks
         end
       end
 
-      # FileUtils.mv config.cover_path, File.join(config.path, cover_path)
-
       FileUtils.touch nfo_path
       FileUtils.touch sfv_path
 
+      if mixed_and_unmixed_tracks?
+        create_playlist continuous_mixes_m3u_path, continuous_mixes
+        create_playlist unmixed_m3u_path, unmixed_tracks
+      end
+
       create_playlist m3u_path, config.tracks
-      create_per_disc_playlists
+
+      #create_per_disc_playlists
+
+      config.cover.rename cover_path if config.cover?
     end
 
     private
@@ -131,7 +137,9 @@ module Decks
     end
 
     def configured_files
-      config.tracks.map(&:path)
+      list = config.tracks.map(&:path)
+      list << config.cover if config.cover?
+      list
     end
 
     def clear
@@ -170,6 +178,44 @@ module Decks
 
     def compilation?
       config.compilation?
+    end
+
+    def continuous_mixes
+      tracks.select(&:mixed?)
+    end
+
+    def continuous_mixes?
+      continuous_mixes.any?
+    end
+
+    def unmixed_tracks
+      tracks.reject(&:mixed?)
+    end
+
+    def mixed_and_unmixed_tracks?
+      tracks.any?(&:mixed?) && tracks.any?(&:unmixed?)
+    end
+
+    def continuous_mixes_m3u_path
+      base = release_filename do |parts|
+        last = parts.pop
+        parts << "#{last.dup} (Continuous Mixes)"
+      end
+
+      path.join "000-#{base}.m3u"
+    end
+
+    def unmixed_m3u_path
+      base = release_filename do |parts|
+        last = parts.pop
+        parts << "#{last.dup} (Unmixed)"
+      end
+
+      path.join "000-#{base}.m3u"
+    end
+
+    def tracks
+      config.tracks
     end
   end
 end

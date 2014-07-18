@@ -17,7 +17,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'CD'
-        release.cover 'cover'
 
         release.track 'track1.mp3' do |track|
           track.number = 1
@@ -90,7 +89,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = '2CD'
-        release.cover 'cover'
 
         release.track 'track1.mp3' do |track|
           track.number = 1
@@ -215,7 +213,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = '2CD'
-        release.cover 'cover'
         release.compilation = true
 
         release.track 'cd1.mp3' do |track|
@@ -296,7 +293,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = '2CD'
-        release.cover 'cover'
         release.compilation = true
 
         release.track 'cd1.mp3' do |track|
@@ -355,7 +351,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = '2CD'
-        release.cover 'cover'
         release.compilation = true
 
         release.track 'cd1.mp3' do |track|
@@ -405,7 +400,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = '2CD'
-        release.cover 'cover'
         release.compilation = true
 
         release.track 'cd1.mp3' do |track|

@@ -42,7 +42,6 @@ module Decks
         release.year = 2010
         release.catalogue_number = 'CH238'
         release.format = 'WEB'
-        release.cover 'cover'
         release.track 'track1.mp3' do |track|
           track.number = 1
           track.title = 'Title'

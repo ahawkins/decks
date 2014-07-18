@@ -4,7 +4,7 @@ module Decks
       flunk
     end
 
-    def test_creates_an_sfv_file
+    def test_creates_a_sfv_file
       flunk
     end
 

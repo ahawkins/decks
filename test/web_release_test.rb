@@ -24,7 +24,7 @@ module Decks
       assert_directory release_directory
     end
 
-    def test_creates_an_sfv_file
+    def test_creates_a_sfv_file
       release = configure do |release|
         release.artist = 'Markus Schulz'
         release.name = 'City Series'
