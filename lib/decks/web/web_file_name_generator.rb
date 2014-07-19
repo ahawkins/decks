@@ -12,6 +12,10 @@ module Decks
       prepend super
     end
 
+    def proof
+      prepend super
+    end
+
     def playlist
       prepend super
     end

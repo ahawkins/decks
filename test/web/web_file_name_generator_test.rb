@@ -31,6 +31,10 @@ module Decks
         'unmixed.mp3'
       end
 
+      def proof
+        'proof.jpg'
+      end
+
       def track(t)
         "#{t.title}#{t.path.extname}"
       end
@@ -69,6 +73,10 @@ module Decks
 
     def test_prepends_00_to_unmixed_playlist
       assert_equal "00-#{delegate.unmixed_playlist}", file_names.unmixed_playlist
+    end
+
+    def test_prepends_00_to_proof
+      assert_equal "00-#{delegate.proof}", file_names.proof
     end
 
     def test_cue_sheet_names_are_the_same_as_track_names

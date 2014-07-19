@@ -138,6 +138,38 @@ module Decks
       refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
     end
 
+    def test_can_configure_a_release_with_a_proof_image
+      release = configure 'acceptance_test' do |release|
+        release.format = 'WEB'
+        release.mp3 '01-test'
+        release.image 'proof.jpg'
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'L', 'Coldharbor',
+        '#', 'CH005',
+        'T',
+        'a', '1',
+        '1',
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
+      ])
+
+      release_name = 'Markus_Schulz-Without_You_Near-(CH005)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}-proof.jpg"), 'proof missing'
+    end
+
     def test_can_add_a_cue_file_to_a_continous_mix_track
       release = configure 'acceptance_test' do |release|
         release.mp3 '01-continuous_mix'

@@ -88,8 +88,20 @@ module Decks
     end
 
     def cover
-      return unless images.size == 1
-      images.first
+      return if images.size > 2
+      images.find do |image|
+        image != proof
+      end
+    end
+
+    def proof?
+      !!proof
+    end
+
+    def proof
+      images.find do |image|
+        image.to_s =~ /proof/i
+      end
     end
 
     # Move the directory and all referenced files inside that directory

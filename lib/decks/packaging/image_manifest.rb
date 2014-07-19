@@ -8,10 +8,13 @@ module Decks
       Image.new configuration.cover, file_names.cover
     end
 
+    def proof
+      return unless configuration.proof?
+      Image.new configuration.proof, file_names.proof
+    end
+
     def each(&block)
-      list = [ ]
-      list << cover if cover
-      list.each(&block)
+      [ cover, proof ].compact.each(&block)
     end
   end
 end

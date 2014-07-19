@@ -6,6 +6,10 @@ module Decks
       def cover
         'test-cover.jpg'
       end
+
+      def proof
+        'test-proof.jpg'
+      end
     end
 
     attr_reader :file_names
@@ -33,7 +37,20 @@ module Decks
     end
 
     def test_includes_the_proof
-      skip
+      release = configure do |release|
+        release.image 'proof.jpg'
+      end
+
+      images = ImageManifest.new release, file_names
+
+      assert_equal 1, images.count
+
+      proof = images.proof
+
+      assert_includes images, proof, 'proof should be in the release'
+
+      assert_equal release.path.join('proof.jpg'), proof.path
+      assert_equal file_names.proof, proof.name
     end
 
     def test_is_empty_if_there_is_no_cover
