@@ -81,26 +81,17 @@ module Decks
       FileUtils.copy_file fixture_path.join('cover.jpg'), config.path.join(path)
     end
 
-    def touch(path, content = '')
-      File.open config.path.join(path), 'w' do |file|
-        file.write content
+    def touch(*paths)
+      file_path = config.path.join *paths
+      FileUtils.mkdir_p file_path.dirname
+
+      File.open file_path, 'w' do |file|
+        if block_given?
+          yield file
+        else
+          file.write 'placeholder'
+        end
       end
-    end
-
-    def cue
-      entry = Configuration::Cue.new
-      yield CueLogDSL.new(entry)
-      config.cues << entry
-    end
-
-    def log
-      entry = Configuration::Log.new
-      yield CueLogDSL.new(entry)
-      config.logs << entry
-    end
-
-    def logs
-      config.logs
     end
 
     def [](number)

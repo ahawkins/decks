@@ -1,4 +1,6 @@
 require 'bundler/setup'
+require 'simplecov'
+SimpleCov.start
 
 require 'decks'
 
@@ -41,24 +43,19 @@ class MiniTest::Unit::TestCase
     release
   end
 
-  def assert_directory(path)
-    assert File.directory?(path), "#{path} should be a directory"
-  end
-
-  def assert_release_file(directory, file)
-    assert File.exists?(File.join(directory, file)), "#{file} should be in the release"
-  end
-
-  def refute_release_file(directory, file)
-    refute File.exists?(File.join(directory, file)), "#{file} should not be in the release"
-  end
-
   def read(*paths)
     File.read(File.join(*paths))
+  end
+
+  def assert_path(path, msg = nil)
+    assert path.exist?, msg || "#{path} should exist"
+  end
+
+  def refute_path(path, msg = nil)
+    refute path.exist?, msg || "#{path} should not exist"
   end
 end
 
 require_relative 'support/configuration_dsl'
 require_relative 'support/screen_test_case'
 require_relative 'support/rules_test_case'
-require_relative 'support/packaging_tests'

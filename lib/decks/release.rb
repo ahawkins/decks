@@ -29,16 +29,14 @@ module Decks
     end
 
     def release!
-      builder.make
+      builder.package!
     end
 
     private
     def build_validator
       case format
       when /web/i
-        WebReleaseValidator.new configuration
-      when /cd/i
-        CdReleaseValidator.new configuration
+        WebValidator.new configuration
       else
         fail "Cannot handle #{format}"
       end
@@ -47,9 +45,7 @@ module Decks
     def build_builder
       case format
       when /web/i
-        WebReleaseMaker.new configuration
-      when /cd/i
-        CdReleaseMaker.new configuration
+        WebPackager.build configuration
       else
         fail "Cannot handle #{format}"
       end

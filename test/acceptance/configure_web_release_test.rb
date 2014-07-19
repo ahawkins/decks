@@ -32,8 +32,6 @@ module Decks
         'N', 'Ibiza 2006 (Mixed by Markus Schulz)',
         'C', 'Y',
         'Y', '2008',
-        'L', 'Coldharbor',
-        '#', 'CH005',
         'T',
         'a', '1',
         '1',
@@ -53,28 +51,58 @@ module Decks
         'q'
       ])
 
-      assert_equal [ 'Markus Schulz' ], release.artists
-      assert_equal 'Ibiza 2006 (Mixed by Markus Schulz)', release.name
-      assert release.compilation?
-      assert_equal 2008, release.year
-      assert_equal 'Coldharbor', release.label
-      assert_equal 'CH005', release.catalogue_number
+      release_name = 'VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
 
-      assert_equal 2, release.tracks.size
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
 
-      assert_equal 'Arnej', release[0].artist
-      assert_equal 'They Always Come Back (Original Mix)', release[0].title
-      assert_equal 1, release[0].number
+      assert_path path.join("01-arnej-they_always_come_back_(original_mix)-decks.mp3")
+      assert_path path.join("02-va-continuous_mix_(mixed_by_markus_schulz)-decks.mp3")
 
-      assert_equal 'VA', release[1].artist
-      assert_equal 'Continuous Mix (Mixed by Markus Schulz)', release[1].title
-      assert_equal 2, release[1].number
-      assert release[1].mixed?
-
-      assert_directory scratch_path.join('VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-(CH005)-2008-DECKS')
+      assert_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'mixed m3u file missing'
+      assert_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'mixed m3u file missing'
     end
 
     def test_can_configure_an_album_web_release
+      release = configure 'acceptance_test' do |release|
+        release.format = 'WEB'
+        release.mp3 '01-test'
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'T',
+        'a', '1',
+        '1',
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
+      ])
+
+      release_name = 'Markus_Schulz-Without_You_Near-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
+
+      assert_path path.join("01-markus_schulz-clear_blue_(ft_elevation)-decks.mp3")
+
+      refute_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'Release is only unmixed'
+      refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
+    end
+
+    def test_can_configure_a_release_with_a_catalogue_number
       release = configure 'acceptance_test' do |release|
         release.format = 'WEB'
         release.mp3 '01-test'
@@ -98,38 +126,119 @@ module Decks
         'r'
       ])
 
-      assert_equal [ 'Markus Schulz' ], release.artists
-      assert_equal 'Without You Near', release.name
-      refute release.compilation?
-      assert_equal 2008, release.year
-      assert_equal 'Coldharbor', release.label
-      assert_equal 'CH005', release.catalogue_number
+      release_name = 'Markus_Schulz-Without_You_Near-(CH005)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
 
-      assert_equal 1, release.tracks.size
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
 
-      assert_equal 'Markus Schulz', release[0].artist
-      assert_equal 'Clear Blue (ft Elevation)', release[0].title
-      assert_equal 1, release[0].number
-      refute release[0].mixed?
-
-      assert_directory scratch_path.join('Markus_Schulz-Without_You_Near-WEB-(CH005)-2008-DECKS')
+      refute_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'Release is only unmixed'
+      refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
     end
 
-    def test_can_configure_a_cue_file_for_a_track
+    def test_can_configure_a_release_with_a_cover_image
       release = configure 'acceptance_test' do |release|
-        release.mp3 '01-continuous_mix'
-        release.touch '01-mix.cue', 'fake cue'
+        release.format = 'WEB'
+        release.mp3 '01-test'
+        release.image 'cover.jpg'
       end
 
       run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'L', 'Coldharbor',
+        '#', 'CH005',
         'T',
         'a', '1',
         '1',
-        'c', '1'
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
       ])
 
-      assert_equal 1, release.tracks.size
-      assert_equal 'fake cue', release[0].cue
+      release_name = 'Markus_Schulz-Without_You_Near-(CH005)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}.jpg"), 'Artwork missing'
+    end
+
+    def test_can_configure_a_release_with_a_proof_image
+      release = configure 'acceptance_test' do |release|
+        release.format = 'WEB'
+        release.mp3 '01-test'
+        release.image 'proof.jpg'
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'L', 'Coldharbor',
+        '#', 'CH005',
+        'T',
+        'a', '1',
+        '1',
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
+      ])
+
+      release_name = 'Markus_Schulz-Without_You_Near-(CH005)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}-proof.jpg"), 'proof missing'
+    end
+
+    def test_can_add_a_cue_file_to_a_continous_mix_track
+      release = configure 'acceptance_test' do |release|
+        release.mp3 '01-continuous_mix'
+        release.touch '01-mix.cue' do |cue|
+          cue.write 'Fake cue'
+        end
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Ibiza 2006 (Mixed by Markus Schulz)',
+        'C', 'Y',
+        'Y', '2008',
+        'T',
+        'a', '1',
+        '1',
+        't', 'Continuous Mix (Mixed by Markus Schulz)',
+        'a', 'VA',
+        'm', 'Y',
+        'n', '1',
+        'c', '1',
+        'b',
+        'b',
+        'r',
+        'q'
+      ])
+
+      release_name = 'VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
+
+      assert_path path.join("01-va-continuous_mix_(mixed_by_markus_schulz)-decks.mp3")
+      assert_path path.join("01-va-continuous_mix_(mixed_by_markus_schulz)-decks.cue")
     end
 
     def test_can_change_the_file_for_an_existing_track

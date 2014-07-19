@@ -1,5 +1,5 @@
 module Decks
-  class WebReleaseValidator < DelegateClass(Release)
+  class WebValidator < DelegateClass(Configuration)
     attr_reader :errors
 
     def initialize(release)
@@ -30,8 +30,6 @@ module Decks
       end
 
       errors << 'Track numbers duplicated' unless tracks.uniq(&:number).size == tracks.size
-
-      errors << 'All cues must have content' unless cues.all?(&:text)
     end
 
     def validate_naming

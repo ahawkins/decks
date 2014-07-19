@@ -1,19 +1,16 @@
 module Decks
-  class ReleaseFileNameFactory
+  class FileNameGenerator
+    include Concord.new(:config)
     include SanitizationHelpers
 
-    include Concord.new(:release, :prefix)
-
-    def name(*tags)
+    def release
       parts = [ ]
 
       parts << (compilation? ? 'VA' : artist_names)
 
-      parts << release.name
+      parts << config.name
 
       parts << "(#{catalogue_number})" if catalogue_number?
-
-      parts = parts + tags.map { |t| t.to_s.upcase }
 
       parts << format.upcase
       parts << 'LOSSLESS' if lossless?
@@ -21,10 +18,6 @@ module Decks
       parts << 'DECKS'
 
       parts.map { |part| sanitize(part) }.join('-')
-    end
-
-    def path(*tags)
-      release.dirname.join name(*tags)
     end
 
     def nfo
@@ -35,7 +28,7 @@ module Decks
       file :sfv
     end
 
-    def jpg
+    def cover
       file :jpg
     end
 
@@ -43,29 +36,41 @@ module Decks
       file :jpg, :proof
     end
 
-    def m3u
+    def playlist
       file :m3u
     end
 
-    def mixed_m3u
+    def mixed_playlist
       file :m3u, :mixed
     end
 
-    def unmixed_m3u
+    def unmixed_playlist
       file :m3u, :unmixed
     end
 
+    def track(t)
+      ('%02d-%s-%s-%s%s' % [
+        t.number,
+        sanitize(t.artist),
+        sanitize(t.title),
+        'DECKS',
+        t.path.extname
+      ]).downcase
+    end
+
     private
-    def file(extension, *tags)
-      path.join "#{prefix}-#{name(*tags)}.#{extension}".downcase
+    def file(extension, tag = nil)
+      parts = [ release, tag ].compact
+
+      "#{parts.join('-')}.#{extension}".downcase
     end
 
     def compilation?
-      release.compilation?
+      config.compilation?
     end
 
     def catalogue_number
-      release.catalogue_number
+      config.catalogue_number
     end
 
     def catalogue_number?
@@ -73,19 +78,19 @@ module Decks
     end
 
     def lossless?
-      release.lossless?
+      config.lossless?
     end
 
     def format
-      release.format
+      config.format
     end
 
     def artist_names
-      release.artists.join(' & ')
+      config.artists.join(' & ')
     end
 
     def year
-      release.year
+      config.year
     end
   end
 end

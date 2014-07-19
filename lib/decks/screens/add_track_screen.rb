@@ -14,7 +14,6 @@ module Decks
         track.artist = audio_file.artist
         track.title = audio_file.title
         track.number = audio_file.track
-        track.disc = audio_file.disc
         track.mixed = mixed? audio_file
 
         track.artist = track.mixed? ? 'VA' : audio_file.artist

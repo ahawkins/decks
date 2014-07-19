@@ -1,6 +1,6 @@
 module Decks
   class Configuration
-    Track = Struct.new :number, :disc, :title, :artist, :cue, :log, :mixed do
+    Track = Struct.new :number, :title, :artist, :cue, :mixed do
       attr_reader :path
 
       def path=(value)
@@ -19,44 +19,14 @@ module Decks
         !!cue
       end
 
-      def log?
-        !!log
+      def rename(new_path)
+        return if new_path == path
+        path.rename new_path
+        @path = new_path
       end
 
       def basename
         path.basename
-      end
-
-      def extname
-        path.extname
-      end
-
-      def cue_path
-        path.sub /\.(mp3|flac)$/, '.cue'
-      end
-
-      def log_path
-        path.sub /\.(mp3|flac)$/, '.log'
-      end
-    end
-
-    Cue = Struct.new :number, :text do
-      def disc
-        number
-      end
-
-      def track
-        number
-      end
-    end
-
-    Log = Struct.new :number, :text do
-      def disc
-        number
-      end
-
-      def track
-        number
       end
     end
 
@@ -77,19 +47,10 @@ module Decks
 
     attr_accessor :tracks
 
-    attr_accessor :cues
-    attr_accessor :logs
-
     def initialize(path)
       @path = Pathname.new path.to_s
       @tracks = [ ]
       @artists = [ ]
-      @cues = [ ]
-      @logs = [ ]
-    end
-
-    def path=(value)
-      @path = Pathname.new value.to_s
     end
 
     def compilation?
@@ -113,23 +74,21 @@ module Decks
     end
 
     def files
-      Dir[path.join('**', '*.*')].map do |file|
-        Pathname.new file
+      path.children
+    end
+
+    def move(new_path)
+      return unless new_path != path
+
+      base_path = new_path.dirname
+
+      FileUtils.mv path, new_path
+
+      tracks.each do |track|
+        track.path = new_path.join track.basename
       end
-    end
 
-    def cover?
-      !!cover
-    end
-
-    def cover
-      return unless images.size == 1
-      images.first
-    end
-
-    private
-    def images
-      Pathname.glob path.join( '*.{jpg,jpeg}')
+      @path = new_path
     end
   end
 end

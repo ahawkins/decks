@@ -16,12 +16,14 @@ module Decks
 
     def test_sets_cue_from_the_file
       reconfigure do |release|
-        release.touch 'example.cue', 'fake cue'
+        release.touch 'example.cue' do |cue|
+          cue.write 'placeholder'
+        end
       end
 
       screen.set release.path.join('example.cue')
 
-      assert_equal 'fake cue', track.cue
+      assert_equal 'placeholder', track.cue
     end
 
     def test_only_prints_cue_files
