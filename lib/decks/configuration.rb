@@ -53,10 +53,6 @@ module Decks
       @artists = [ ]
     end
 
-    def path=(value)
-      @path = Pathname.new value.to_s
-    end
-
     def compilation?
       !!@compilation
     end
@@ -83,28 +79,6 @@ module Decks
       end
     end
 
-    def cover?
-      !!cover
-    end
-
-    def cover
-      return if images.size > 2
-      images.find do |image|
-        image != proof
-      end
-    end
-
-    def proof?
-      !!proof
-    end
-
-    def proof
-      images.find do |image|
-        image.to_s =~ /proof/i
-      end
-    end
-
-    # Move the directory and all referenced files inside that directory
     def move(new_path)
       return unless new_path != path
 
@@ -117,11 +91,6 @@ module Decks
       end
 
       @path = new_path
-    end
-
-    private
-    def images
-      Pathname.glob path.join('*.{jpg,jpeg}')
     end
   end
 end
