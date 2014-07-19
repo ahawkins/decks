@@ -25,6 +25,9 @@ require_relative 'decks/release'
 
 require_relative 'decks/packager'
 
+require_relative 'decks/packaging/image'
+require_relative 'decks/packaging/playlist'
+require_relative 'decks/packaging/cue_sheet'
 require_relative 'decks/packaging/meta_tagger'
 require_relative 'decks/packaging/file_name_generator'
 require_relative 'decks/packaging/image_manifest'

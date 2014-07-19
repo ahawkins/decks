@@ -1,6 +1,4 @@
 module Decks
-  CueSheet = Struct.new :name, :content
-
   class WebCueSheetManifest
     include Concord.new(:configuration, :file_names)
 
