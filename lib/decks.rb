@@ -22,8 +22,6 @@ require_relative 'decks/configuration'
 
 require_relative 'decks/release'
 
-require_relative 'decks/web_release_maker'
-
 require_relative 'decks/web_release_validator'
 
 require_relative 'decks/packager'
