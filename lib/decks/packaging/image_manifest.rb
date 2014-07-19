@@ -1,7 +1,7 @@
 module Decks
   Image = Struct.new :path, :name
 
-  class ImageSet
+  class ImageManifest
     include Concord.new(:configuration, :file_names)
     include Enumerable
 

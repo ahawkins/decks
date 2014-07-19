@@ -1,7 +1,7 @@
 require_relative '../test_helper'
 
 module Decks
-  class PlaylistGeneratorTest < MiniTest::Unit::TestCase
+  class PlaylistManifestTest < MiniTest::Unit::TestCase
     class FakeFileNameGenerator
       def track(track)
         track.title
@@ -27,7 +27,7 @@ module Decks
         yield release
       end
 
-      PlaylistGenerator.new release.tracks, file_names
+      PlaylistManifest.new release.tracks, file_names
     end
 
     def setup

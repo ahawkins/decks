@@ -4,7 +4,6 @@ module Decks
       :configuration,
       :validator,
       :file_names,
-      :allowed_files,
       :tagger,
       :images,
       :playlists,
@@ -37,10 +36,13 @@ module Decks
       fail PackageError, "Cannot package because of errors: #{validator.errors}" unless validator.valid?
     end
 
+    def known_files
+      configuration.tracks.map(&:path) + images.map(&:path)
+    end
+
     def delete_unknown_files
       configuration.path.children.each do |file|
-        next if allowed_files.include? file
-
+        next if known_files.include? file
         FileUtils.rm_rf file
       end
     end

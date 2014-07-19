@@ -44,12 +44,11 @@ module Decks
         configuration: release,
         validator: FakeValidator.new,
         file_names: FakeFileNameGenerator.new,
-        allowed_files: AllowedFileList.new(release),
         tagger: NullTagger.new,
         images: [ ],
         playlists: [ ],
         cue_sheets: [ ],
-        logs: [ ]
+        logs: [ ],
       }.merge(attributes)
 
       Packager.new(values).package!
@@ -155,7 +154,7 @@ module Decks
       assert_path release.path.join(track_file_name)
     end
 
-    def test_images_file_are_renamed_according_to_given_name
+    def test_image_file_are_renamed_according_to_given_name
       release = configure do |release|
         release.image 'cover.jpg'
       end

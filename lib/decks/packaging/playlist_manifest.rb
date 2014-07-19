@@ -20,7 +20,7 @@ module Decks
     end
   end
 
-  class PlaylistGenerator
+  class PlaylistManifest
     include Concord.new(:track_list, :names)
     include Enumerable
 

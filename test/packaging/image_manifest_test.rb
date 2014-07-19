@@ -1,7 +1,7 @@
 require_relative '../test_helper'
 
 module Decks
-  class ImageListTest < MiniTest::Unit::TestCase
+  class ImageManifestTest < MiniTest::Unit::TestCase
     class FakeFileNameGenerator
       def cover
         'test-cover.jpg'
@@ -20,7 +20,7 @@ module Decks
         release.image 'cover.jpg'
       end
 
-      images = ImageSet.new release, file_names
+      images = ImageManifest.new release, file_names
 
       assert_equal 1, images.count
 
@@ -35,7 +35,7 @@ module Decks
     def test_is_empty_if_there_is_no_cover
       release = configure
 
-      images = ImageSet.new release, file_names
+      images = ImageManifest.new release, file_names
 
       refute images.any?
     end
