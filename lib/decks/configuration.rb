@@ -1,6 +1,6 @@
 module Decks
   class Configuration
-    Track = Struct.new :number, :title, :artist, :cue,  :mixed do
+    Track = Struct.new :number, :title, :artist, :cue, :mixed do
       attr_reader :path
 
       def path=(value)
