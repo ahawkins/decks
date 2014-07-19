@@ -32,6 +32,7 @@ require_relative 'decks/packaging/image_manifest'
 require_relative 'decks/packaging/playlist_manifest'
 
 require_relative 'decks/web/web_file_name_generator'
+require_relative 'decks/web/web_meta_tagger'
 
 require_relative 'decks/ui'
 
