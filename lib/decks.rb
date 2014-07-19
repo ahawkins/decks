@@ -28,6 +28,8 @@ require_relative 'decks/web_release_validator'
 require_relative 'decks/release_file_name_factory'
 require_relative 'decks/track_file_name_factory'
 
+require_relative 'decks/packaging/meta_tagger'
+
 require_relative 'decks/ui'
 
 require_relative 'decks/ui/console'
