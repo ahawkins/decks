@@ -24,6 +24,11 @@ module Decks
       prepend super
     end
 
+    def cue(t)
+      file_name = track t
+      file_name.gsub t.path.extname, '.cue'
+    end
+
     private
     def prepend(text)
       "00-#{text}"

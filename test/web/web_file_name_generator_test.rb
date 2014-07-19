@@ -28,7 +28,11 @@ module Decks
       end
 
       def unmixed_playlist
-        'unmixed.m3p'
+        'unmixed.mp3'
+      end
+
+      def track(t)
+        "#{t.title}#{t.path.extname}"
       end
     end
 
@@ -65,6 +69,16 @@ module Decks
 
     def test_prepends_00_to_unmixed_playlist
       assert_equal "00-#{delegate.unmixed_playlist}", file_names.unmixed_playlist
+    end
+
+    def test_cue_sheet_names_are_the_same_as_track_names
+      release = configure do |release|
+        release.track 'test.mp3' do |track|
+          track.title = 'test'
+        end
+      end
+
+      assert_equal 'test.cue', file_names.cue(release[0])
     end
   end
 end

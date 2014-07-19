@@ -138,39 +138,61 @@ module Decks
       refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
     end
 
-    # def test_can_configure_a_cue_file_for_a_track
-    #   release = configure 'acceptance_test' do |release|
-    #     release.mp3 '01-continuous_mix'
-    #     release.touch '01-mix.cue', 'fake cue'
-    #   end
-    #
-    #   run_script(release, [
-    #     'T',
-    #     'a', '1',
-    #     '1',
-    #     'c', '1'
-    #   ])
-    #
-    #   assert_equal 1, release.tracks.size
-    #   assert_equal 'fake cue', release[0].cue
-    # end
-    #
-    # def test_can_change_the_file_for_an_existing_track
-    #   release = configure 'acceptance_test' do |release|
-    #     release.mp3 '01-file1'
-    #     release.mp3 '02-file2'
-    #   end
-    #
-    #   run_script(release, [
-    #     'T',
-    #     'a', '1',
-    #     '1',
-    #     'f', '2'
-    #   ])
-    #
-    #   assert_equal 1, release.tracks.size
-    #
-    #   assert_equal release.path.join('02-file2.mp3'), release[0].path
-    # end
+    def test_can_add_a_cue_file_to_a_continous_mix_track
+      release = configure 'acceptance_test' do |release|
+        release.mp3 '01-continuous_mix'
+        release.touch '01-mix.cue' do |cue|
+          cue.write 'Fake cue'
+        end
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Ibiza 2006 (Mixed by Markus Schulz)',
+        'C', 'Y',
+        'Y', '2008',
+        'T',
+        'a', '1',
+        '1',
+        't', 'Continuous Mix (Mixed by Markus Schulz)',
+        'a', 'VA',
+        'm', 'Y',
+        'n', '1',
+        'c', '1',
+        'b',
+        'b',
+        'r',
+        'q'
+      ])
+
+      release_name = 'VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
+
+      assert_path path.join("01-va-continuous_mix_(mixed_by_markus_schulz)-decks.mp3")
+      assert_path path.join("01-va-continuous_mix_(mixed_by_markus_schulz)-decks.cue")
+    end
+
+    def test_can_change_the_file_for_an_existing_track
+      release = configure 'acceptance_test' do |release|
+        release.mp3 '01-file1'
+        release.mp3 '02-file2'
+      end
+
+      run_script(release, [
+        'T',
+        'a', '1',
+        '1',
+        'f', '2'
+      ])
+
+      assert_equal 1, release.tracks.size
+
+      assert_equal release.path.join('02-file2.mp3'), release[0].path
+    end
   end
 end

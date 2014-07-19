@@ -11,7 +11,7 @@ module Decks
           tagger: WebMetaTagger.new(configuration),
           images: ImageManifest.new(configuration, file_names),
           playlists: PlaylistManifest.new(configuration.tracks, file_names),
-          cue_sheets: [ ],
+          cue_sheets: WebCueSheetManifest.new(configuration, file_names),
           logs: [ ]
         })
       end
