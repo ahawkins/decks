@@ -48,6 +48,16 @@ module Decks
       file :m3u, :unmixed
     end
 
+    def track(t)
+      ('%02d-%s-%s-%s%s' % [
+        t.number,
+        sanitize(t.artist),
+        sanitize(t.title),
+        'DECKS',
+        t.path.extname
+      ]).downcase
+    end
+
     private
     def file(extension, tag = nil)
       parts = [ name, tag ].compact
