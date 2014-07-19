@@ -36,7 +36,7 @@ module Decks
     def build_validator
       case format
       when /web/i
-        WebReleaseValidator.new configuration
+        WebValidator.new configuration
       else
         fail "Cannot handle #{format}"
       end

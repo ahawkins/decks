@@ -1,7 +1,7 @@
-require_relative 'test_helper'
+require_relative '../test_helper'
 
 module Decks
-  class WebReleaseRulesTest < RulesTestCase
+  class WebValidatorTest < RulesTestCase
     attr_reader :release
 
     def track

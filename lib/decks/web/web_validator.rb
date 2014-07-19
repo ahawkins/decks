@@ -1,5 +1,5 @@
 module Decks
-  class WebReleaseValidator < DelegateClass(Release)
+  class WebValidator < DelegateClass(Configuration)
     attr_reader :errors
 
     def initialize(release)

@@ -22,7 +22,6 @@ require_relative 'decks/configuration'
 
 require_relative 'decks/release'
 
-require_relative 'decks/web_release_validator'
 
 require_relative 'decks/packager'
 
@@ -33,6 +32,7 @@ require_relative 'decks/packaging/playlist_manifest'
 
 require_relative 'decks/web/web_file_name_generator'
 require_relative 'decks/web/web_meta_tagger'
+require_relative 'decks/web/web_validator'
 
 require_relative 'decks/ui'
 
