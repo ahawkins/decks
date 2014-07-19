@@ -32,6 +32,10 @@ module Decks
       assert_equal file_names.cover, cover.name
     end
 
+    def test_includes_the_proof
+      skip
+    end
+
     def test_is_empty_if_there_is_no_cover
       release = configure
 
