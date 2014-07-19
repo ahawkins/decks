@@ -16,7 +16,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'Artist-Album-CD-2014-DECKS', factory.name
+      assert_equal 'Artist-Album-CD-2014-DECKS', factory.release
     end
 
     def test_compilation_releases_are_named_va
@@ -30,7 +30,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'VA-Album-CD-2014-DECKS', factory.name
+      assert_equal 'VA-Album-CD-2014-DECKS', factory.release
     end
 
     def test_handles_multiple_artist_names
@@ -44,7 +44,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'Artist1_and_Artist2-Album-CD-2014-DECKS', factory.name
+      assert_equal 'Artist1_and_Artist2-Album-CD-2014-DECKS', factory.release
     end
 
     def test_works_with_catalogue_number
@@ -58,7 +58,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'Artist-Album-(1234)-CD-2014-DECKS', factory.name
+      assert_equal 'Artist-Album-(1234)-CD-2014-DECKS', factory.release
     end
 
     def test_works_with_losess_releases
@@ -72,7 +72,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'Artist-Album-CD-LOSSLESS-2014-DECKS', factory.name
+      assert_equal 'Artist-Album-CD-LOSSLESS-2014-DECKS', factory.release
     end
 
     def test_works_with_lossless_and_catalogue_numbers
@@ -87,7 +87,7 @@ module Decks
 
       factory = build release
 
-      assert_equal 'Artist-Album-(1234)-CD-LOSSLESS-2014-DECKS', factory.name
+      assert_equal 'Artist-Album-(1234)-CD-LOSSLESS-2014-DECKS', factory.release
     end
 
     def test_can_generate_nfo_file_names
@@ -100,7 +100,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}.nfo", factory.nfo
+      assert_equal "#{factory.release.downcase}.nfo", factory.nfo
     end
 
     def test_can_generate_cover_file_names
@@ -113,7 +113,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}.jpg", factory.cover
+      assert_equal "#{factory.release.downcase}.jpg", factory.cover
     end
 
     def test_can_generate_proof_jpg_file_names
@@ -126,7 +126,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}-proof.jpg", factory.proof
+      assert_equal "#{factory.release.downcase}-proof.jpg", factory.proof
     end
 
     def test_can_generate_sfv_file_names
@@ -139,7 +139,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}.sfv", factory.sfv
+      assert_equal "#{factory.release.downcase}.sfv", factory.sfv
     end
 
     def test_can_generate_m3u_file_names
@@ -152,7 +152,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}.m3u", factory.playlist
+      assert_equal "#{factory.release.downcase}.m3u", factory.playlist
     end
 
     def test_can_generate_unmixed_m3u_filenames
@@ -165,7 +165,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}-unmixed.m3u", factory.unmixed_playlist
+      assert_equal "#{factory.release.downcase}-unmixed.m3u", factory.unmixed_playlist
     end
 
     def test_can_generate_continuous_mixes_m3u_filenames
@@ -178,7 +178,7 @@ module Decks
 
       factory = build release
 
-      assert_equal "#{factory.name.downcase}-mixed.m3u", factory.mixed_playlist
+      assert_equal "#{factory.release.downcase}-mixed.m3u", factory.mixed_playlist
     end
   end
 end

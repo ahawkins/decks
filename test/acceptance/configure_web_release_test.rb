@@ -32,8 +32,6 @@ module Decks
         'N', 'Ibiza 2006 (Mixed by Markus Schulz)',
         'C', 'Y',
         'Y', '2008',
-        'L', 'Coldharbor',
-        '#', 'CH005',
         'T',
         'a', '1',
         '1',
@@ -53,30 +51,58 @@ module Decks
         'q'
       ])
 
-      release_directory = scratch_directory.join('VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-(CH005)-WEB-2008-DECKS')
+      release_name = 'VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
 
-      # assert_equal [ 'Markus Schulz' ], release.artists
-      # assert_equal 'Ibiza 2006 (Mixed by Markus Schulz)', release.name
-      # assert release.compilation?
-      # assert_equal 2008, release.year
-      # assert_equal 'Coldharbor', release.label
-      # assert_equal 'CH005', release.catalogue_number
-      #
-      # assert_equal 2, release.tracks.size
-      #
-      # assert_equal 'Arnej', release[0].artist
-      # assert_equal 'They Always Come Back (Original Mix)', release[0].title
-      # assert_equal 1, release[0].number
-      #
-      # assert_equal 'VA', release[1].artist
-      # assert_equal 'Continuous Mix (Mixed by Markus Schulz)', release[1].title
-      # assert_equal 2, release[1].number
-      # assert release[1].mixed?
-      #
-      # assert_directory scratch_path.join('VA-Ibiza_2006_(Mixed_by_Markus_Schulz)-WEB-(CH005)-2008-DECKS')
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
+
+      assert_path path.join("01-arnej-they_always_come_back_(original_mix)-decks.mp3")
+      assert_path path.join("02-va-continuous_mix_(mixed_by_markus_schulz)-decks.mp3")
+
+      assert_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'mixed m3u file missing'
+      assert_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'mixed m3u file missing'
     end
 
     def test_can_configure_an_album_web_release
+      release = configure 'acceptance_test' do |release|
+        release.format = 'WEB'
+        release.mp3 '01-test'
+      end
+
+      run_script(release, [
+        'A', 'Markus Schulz',
+        'N', 'Without You Near',
+        'C', 'N',
+        'Y', '2008',
+        'T',
+        'a', '1',
+        '1',
+        'a', 'Markus Schulz',
+        't', 'Clear Blue (ft Elevation)',
+        'n', '1',
+        'b',
+        'b',
+        'r'
+      ])
+
+      release_name = 'Markus_Schulz-Without_You_Near-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
+
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
+
+      assert_path path.join("01-markus_schulz-clear_blue_(ft_elevation)-decks.mp3")
+
+      refute_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'Release is only unmixed'
+      refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
+    end
+
+    def test_can_configure_a_release_with_a_catalogue_number
       release = configure 'acceptance_test' do |release|
         release.format = 'WEB'
         release.mp3 '01-test'
@@ -100,56 +126,51 @@ module Decks
         'r'
       ])
 
-      assert_equal [ 'Markus Schulz' ], release.artists
-      assert_equal 'Without You Near', release.name
-      refute release.compilation?
-      assert_equal 2008, release.year
-      assert_equal 'Coldharbor', release.label
-      assert_equal 'CH005', release.catalogue_number
+      release_name = 'Markus_Schulz-Without_You_Near-(CH005)-WEB-2008-DECKS'
+      path = scratch_path.join release_name
+      assert_path path, 'Package should be created'
 
-      assert_equal 1, release.tracks.size
+      assert_path path.join("00-#{release_name.downcase}.nfo"), 'nfo file missing'
+      assert_path path.join("00-#{release_name.downcase}.sfv"), 'sfv file missing'
+      assert_path path.join("00-#{release_name.downcase}.m3u"), 'm3u file missing'
 
-      assert_equal 'Markus Schulz', release[0].artist
-      assert_equal 'Clear Blue (ft Elevation)', release[0].title
-      assert_equal 1, release[0].number
-      refute release[0].mixed?
-
-      assert_directory scratch_path.join('Markus_Schulz-Without_You_Near-WEB-(CH005)-2008-DECKS')
+      refute_path path.join("00-#{release_name.downcase}-mixed.m3u"), 'Release is only unmixed'
+      refute_path path.join("00-#{release_name.downcase}-unmixed.m3u"), 'Release is only unmixed'
     end
 
-    def test_can_configure_a_cue_file_for_a_track
-      release = configure 'acceptance_test' do |release|
-        release.mp3 '01-continuous_mix'
-        release.touch '01-mix.cue', 'fake cue'
-      end
-
-      run_script(release, [
-        'T',
-        'a', '1',
-        '1',
-        'c', '1'
-      ])
-
-      assert_equal 1, release.tracks.size
-      assert_equal 'fake cue', release[0].cue
-    end
-
-    def test_can_change_the_file_for_an_existing_track
-      release = configure 'acceptance_test' do |release|
-        release.mp3 '01-file1'
-        release.mp3 '02-file2'
-      end
-
-      run_script(release, [
-        'T',
-        'a', '1',
-        '1',
-        'f', '2'
-      ])
-
-      assert_equal 1, release.tracks.size
-
-      assert_equal release.path.join('02-file2.mp3'), release[0].path
-    end
+    # def test_can_configure_a_cue_file_for_a_track
+    #   release = configure 'acceptance_test' do |release|
+    #     release.mp3 '01-continuous_mix'
+    #     release.touch '01-mix.cue', 'fake cue'
+    #   end
+    #
+    #   run_script(release, [
+    #     'T',
+    #     'a', '1',
+    #     '1',
+    #     'c', '1'
+    #   ])
+    #
+    #   assert_equal 1, release.tracks.size
+    #   assert_equal 'fake cue', release[0].cue
+    # end
+    #
+    # def test_can_change_the_file_for_an_existing_track
+    #   release = configure 'acceptance_test' do |release|
+    #     release.mp3 '01-file1'
+    #     release.mp3 '02-file2'
+    #   end
+    #
+    #   run_script(release, [
+    #     'T',
+    #     'a', '1',
+    #     '1',
+    #     'f', '2'
+    #   ])
+    #
+    #   assert_equal 1, release.tracks.size
+    #
+    #   assert_equal release.path.join('02-file2.mp3'), release[0].path
+    # end
   end
 end

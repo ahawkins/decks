@@ -18,6 +18,10 @@ module Decks
     def size
       list.size
     end
+
+    def content
+      list.join("\n")
+    end
   end
 
   class PlaylistManifest

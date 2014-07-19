@@ -3,6 +3,10 @@ require_relative '../test_helper'
 module Decks
   class WebFileNameGeneratorTest < MiniTest::Unit::TestCase
     class FakeDelegate
+      def release
+        'fake-release'
+      end
+
       def nfo
         'fake.nfo'
       end
@@ -33,6 +37,10 @@ module Decks
     def setup
       @delegate = FakeDelegate.new
       @file_names = WebFileNameGenerator.new delegate
+    end
+
+    def test_does_not_change_release
+      assert_equal delegate.release, file_names.release
     end
 
     def test_prepends_00_to_nfo

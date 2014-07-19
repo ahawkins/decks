@@ -29,7 +29,7 @@ module Decks
     end
 
     def release!
-      builder.make
+      builder.package!
     end
 
     private
@@ -45,7 +45,7 @@ module Decks
     def build_builder
       case format
       when /web/i
-        WebPackager.new configuration
+        WebPackager.build configuration
       else
         fail "Cannot handle #{format}"
       end

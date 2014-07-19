@@ -1,14 +1,14 @@
 module Decks
   class FileNameGenerator
-    include Concord.new(:release)
+    include Concord.new(:config)
     include SanitizationHelpers
 
-    def name
+    def release
       parts = [ ]
 
       parts << (compilation? ? 'VA' : artist_names)
 
-      parts << release.name
+      parts << config.name
 
       parts << "(#{catalogue_number})" if catalogue_number?
 
@@ -60,17 +60,17 @@ module Decks
 
     private
     def file(extension, tag = nil)
-      parts = [ name, tag ].compact
+      parts = [ release, tag ].compact
 
       "#{parts.join('-')}.#{extension}".downcase
     end
 
     def compilation?
-      release.compilation?
+      config.compilation?
     end
 
     def catalogue_number
-      release.catalogue_number
+      config.catalogue_number
     end
 
     def catalogue_number?
@@ -78,19 +78,19 @@ module Decks
     end
 
     def lossless?
-      release.lossless?
+      config.lossless?
     end
 
     def format
-      release.format
+      config.format
     end
 
     def artist_names
-      release.artists.join(' & ')
+      config.artists.join(' & ')
     end
 
     def year
-      release.year
+      config.year
     end
   end
 end

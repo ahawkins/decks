@@ -45,12 +45,12 @@ class MiniTest::Unit::TestCase
     File.read(File.join(*paths))
   end
 
-  def assert_path(path)
-    assert path.exist?, "#{path} should exist"
+  def assert_path(path, msg = nil)
+    assert path.exist?, msg || "#{path} should exist"
   end
 
-  def refute_path(path)
-    refute path.exist?, "#{path} should not exist"
+  def refute_path(path, msg = nil)
+    refute path.exist?, msg || "#{path} should not exist"
   end
 end
 
