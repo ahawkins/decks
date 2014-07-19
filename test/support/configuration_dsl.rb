@@ -94,22 +94,6 @@ module Decks
       end
     end
 
-    def cue
-      entry = Configuration::Cue.new
-      yield CueLogDSL.new(entry)
-      config.cues << entry
-    end
-
-    def log
-      entry = Configuration::Log.new
-      yield CueLogDSL.new(entry)
-      config.logs << entry
-    end
-
-    def logs
-      config.logs
-    end
-
     def [](number)
       tracks[number]
     end
