@@ -2,29 +2,41 @@ require_relative '../test_helper'
 
 module Decks
   class PlaylistGeneratorTest < MiniTest::Unit::TestCase
-    class TestNameGenerator
-      def track_file_name(track)
+    class FakeFileNameGenerator
+      def track(track)
         track.title
+      end
+
+      def playlist
+        'all_files.m3u'
+      end
+
+      def mixed_playlist
+        'mixed.m3u'
+      end
+
+      def unmixed_playlist
+        'unmixed.m3u'
       end
     end
 
-    attr_reader :namer
+    attr_reader :file_names
 
     def build
       release = configure do |release|
         yield release
       end
 
-      PlaylistGenerator.new release.tracks, namer
+      PlaylistGenerator.new release.tracks, file_names
     end
 
     def setup
-      @namer = TestNameGenerator.new
+      @file_names = FakeFileNameGenerator.new
       super
     end
 
     def test_use_the_namer_to_create_a_release_playlist
-      playlist = build do |release|
+      playlists = build do |release|
         release.track 'track2.mp3' do |track|
           track.title = 'Track2'
           track.number = 2
@@ -35,9 +47,13 @@ module Decks
         end
       end
 
-      refute playlist.split?
+      assert_equal 1, playlists.count, 'Should only be a release playlist if no mixed & unmixed tracks'
 
-      list = playlist.all_files
+      list = playlists.release
+
+      assert_includes playlists, list, 'List should be in release'
+
+      assert_equal file_names.playlist, list.name
 
       assert_equal 2, list.size
 
@@ -46,7 +62,7 @@ module Decks
     end
 
     def test_uses_the_namer_to_create_a_mixed_playlist
-      playlist = build do |release|
+      playlists = build do |release|
         release.track 'track2.mp3' do |track|
           track.title = 'Track2'
           track.number = 2
@@ -63,9 +79,13 @@ module Decks
         end
       end
 
-      assert playlist.split?
+      assert_equal 3, playlists.count, 'Should be release/mixed/unmixed playlists'
 
-      list = playlist.mixed_files
+      list = playlists.mixed
+
+      assert_includes playlists, list, 'List should be in release'
+
+      assert_equal file_names.mixed_playlist, list.name
 
       assert_equal 2, list.size
 
@@ -73,8 +93,8 @@ module Decks
       assert_equal list[1], 'Track3'
     end
 
-    def test_uses_the_namer_to_crate_an_unmixed_playlist
-      playlist = build do |release|
+    def test_uses_the_namer_to_create_an_unmixed_playlist
+      playlists = build do |release|
         release.track 'track2.mp3' do |track|
           track.title = 'Track2'
           track.number = 2
@@ -92,9 +112,13 @@ module Decks
         end
       end
 
-      assert playlist.split?
+      assert_equal 3, playlists.count, 'Should be release/mixed/unmixed playlists'
 
-      list = playlist.unmixed_files
+      list = playlists.unmixed
+
+      assert_includes playlists, list, 'List should be in release'
+
+      assert_equal file_names.unmixed_playlist, list.name
 
       assert_equal 2, list.size
 
