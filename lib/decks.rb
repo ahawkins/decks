@@ -34,6 +34,7 @@ require_relative 'decks/packaging/meta_tagger'
 require_relative 'decks/packaging/playlist_generator'
 require_relative 'decks/packaging/file_name_generator'
 require_relative 'decks/packaging/allowed_file_list'
+require_relative 'decks/packaging/image_set'
 
 require_relative 'decks/ui'
 
