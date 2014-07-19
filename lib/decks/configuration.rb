@@ -19,7 +19,7 @@ module Decks
         !!cue
       end
 
-      def move(new_path)
+      def rename(new_path)
         return if new_path == path
         path.rename new_path
         @path = new_path

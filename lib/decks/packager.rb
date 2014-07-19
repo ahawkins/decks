@@ -6,6 +6,7 @@ module Decks
       :file_names,
       :allowed_files,
       :tagger,
+      :images,
       :playlists,
       :cue_sheets,
       :logs
@@ -14,29 +15,26 @@ module Decks
     PackageError = Class.new StandardError
 
     def package!
-      # validate
+      validate
       delete_unknown_files
-      # write_tags
-      # create_nfo
-      # rename_tracks
-      #
-      # rename_cover
-      #
-      # playlists.each do |playlist|
-      #   File.open working_directory.join(playlist.name), 'w' do |file|
-      #     file.puts playlist.content
-      #   end
-      # end
-      #
-      # create_sfv
-      # rename_release_directory
+      write_tags
+      create_nfo
+      rename_tracks
+      rename_images
+      create_playlists
+      create_cue_sheets
+      create_logs
+      create_sfv
+      rename_release_directory
     end
 
     private
-    def validate
-      return unless alidator.valid?
+    def working_directory
+      configuration.path
+    end
 
-      fail PackageError, "Cannot package because of errors: #{validator.errors}"
+    def validate
+      fail PackageError, "Cannot package because of errors: #{validator.errors}" unless validator.valid?
     end
 
     def delete_unknown_files
@@ -57,27 +55,50 @@ module Decks
       FileUtils.touch working_directory.join(file_names.nfo)
     end
 
-    def create_sfv
-      FileUtils.touch workign_directory.join(file_names.sfv)
-    end
-
     def rename_tracks
-      config.tracks.each do |track|
-        new_file_name = names.track_file_name track
-        track.rename new_file_name
+      configuration.tracks.each do |track|
+        new_file_name = file_names.track track
+        track.rename working_directory.join(new_file_name)
       end
     end
 
-    def rename_cover
-      return unless configuration.cover?
-
-      new_path = working_directory.join file_names.cover
-
-      configuration.cover.rename new_path
+    def rename_images
+      images.each do |image|
+        new_path = working_directory.join image.name
+        image.path.rename new_path
+      end
     end
 
-    def working_directory
-      relase.directory
+    def create_playlists
+      playlists.each do |playlist|
+        File.open working_directory.join(playlist.name), 'w' do |file|
+          file.write playlist.content
+        end
+      end
+    end
+
+    def create_cue_sheets
+      cue_sheets.each do |cue_sheet|
+        File.open working_directory.join(cue_sheet.name), 'w' do |file|
+          file.write cue_sheet.content
+        end
+      end
+    end
+
+    def create_logs
+      logs.each do |log|
+        File.open working_directory.join(log.name), 'w' do |file|
+          file.write log.content
+        end
+      end
+    end
+
+    def create_sfv
+      FileUtils.touch working_directory.join(file_names.sfv)
+    end
+
+    def rename_release_directory
+      configuration.move working_directory.dirname.join(file_names.release)
     end
   end
 end
