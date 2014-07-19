@@ -25,7 +25,6 @@ module Decks
       assert_equal 'Given Artist', release[0].artist
       assert_equal 'Given Title', release[0].title
       assert_equal 1, release[0].number
-      assert_equal 2, release[0].disc
     end
 
     def test_continous_mixes_set_mixed_flag_and_va

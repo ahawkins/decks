@@ -30,8 +30,6 @@ module Decks
       end
 
       errors << 'Track numbers duplicated' unless tracks.uniq(&:number).size == tracks.size
-
-      errors << 'All cues must have content' unless cues.all?(&:text)
     end
 
     def validate_naming

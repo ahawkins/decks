@@ -1,6 +1,6 @@
 module Decks
   class Configuration
-    Track = Struct.new :number, :disc, :title, :artist, :cue, :log, :mixed do
+    Track = Struct.new :number, :title, :artist, :cue,  :mixed do
       attr_reader :path
 
       def path=(value)
@@ -19,10 +19,6 @@ module Decks
         !!cue
       end
 
-      def log?
-        !!log
-      end
-
       def move(new_path)
         return if new_path == path
         path.rename new_path
@@ -31,26 +27,6 @@ module Decks
 
       def basename
         path.basename
-      end
-    end
-
-    Cue = Struct.new :number, :text do
-      def disc
-        number
-      end
-
-      def track
-        number
-      end
-    end
-
-    Log = Struct.new :number, :text do
-      def disc
-        number
-      end
-
-      def track
-        number
       end
     end
 
@@ -71,15 +47,10 @@ module Decks
 
     attr_accessor :tracks
 
-    attr_accessor :cues
-    attr_accessor :logs
-
     def initialize(path)
       @path = Pathname.new path.to_s
       @tracks = [ ]
       @artists = [ ]
-      @cues = [ ]
-      @logs = [ ]
     end
 
     def path=(value)
