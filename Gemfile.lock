@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     decks (0.0.1)
+      anima
       concord
       terminal-table
       thor
@@ -9,9 +10,14 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    abstract_type (0.0.7)
     adamantium (0.2.0)
       ice_nine (~> 0.11.0)
       memoizable (~> 0.4.0)
+    anima (0.2.0)
+      abstract_type (~> 0.0.7)
+      adamantium (~> 0.1)
+      equalizer (~> 0.0.8)
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)

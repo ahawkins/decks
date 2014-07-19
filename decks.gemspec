@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'concord'
+  spec.add_dependency 'anima'
   spec.add_dependency 'thor'
   spec.add_dependency 'terminal-table'
 

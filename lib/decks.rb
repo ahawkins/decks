@@ -5,6 +5,7 @@ require 'pathname'
 require 'fileutils'
 require 'delegate'
 require 'concord'
+require 'anima'
 
 module Decks
   # Your code goes here...
@@ -25,10 +26,14 @@ require_relative 'decks/web_release_maker'
 
 require_relative 'decks/web_release_validator'
 
-require_relative 'decks/release_file_name_factory'
 require_relative 'decks/track_file_name_factory'
 
+require_relative 'decks/packager'
+
 require_relative 'decks/packaging/meta_tagger'
+require_relative 'decks/packaging/playlist_generator'
+require_relative 'decks/packaging/file_name_generator'
+require_relative 'decks/packaging/allowed_file_list'
 
 require_relative 'decks/ui'
 

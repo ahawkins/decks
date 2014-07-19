@@ -1,8 +1,7 @@
 module Decks
-  class ReleaseFileNameFactory
+  class FileNameGenerator
+    include Concord.new(:release)
     include SanitizationHelpers
-
-    include Concord.new(:release, :prefix)
 
     def name
       parts = [ ]
@@ -21,10 +20,6 @@ module Decks
       parts.map { |part| sanitize(part) }.join('-')
     end
 
-    def path
-      release.dirname.join name
-    end
-
     def nfo
       file :nfo
     end
@@ -41,23 +36,23 @@ module Decks
       file :jpg, :proof
     end
 
-    def m3u
+    def playlist
       file :m3u
     end
 
-    def mixed_m3u
+    def mixed_playlist
       file :m3u, :mixed
     end
 
-    def unmixed_m3u
+    def unmixed_playlist
       file :m3u, :unmixed
     end
 
     private
     def file(extension, tag = nil)
-      parts = [ prefix, name, tag ].compact
+      parts = [ name, tag ].compact
 
-      path.join "#{parts.join('-')}.#{extension}".downcase
+      "#{parts.join('-')}.#{extension}".downcase
     end
 
     def compilation?
