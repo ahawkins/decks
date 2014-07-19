@@ -74,9 +74,7 @@ module Decks
     end
 
     def files
-      Dir[path.join('**', '*.*')].map do |file|
-        Pathname.new file
-      end
+      path.children
     end
 
     def move(new_path)
