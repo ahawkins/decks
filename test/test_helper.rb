@@ -41,20 +41,16 @@ class MiniTest::Unit::TestCase
     release
   end
 
-  def assert_directory(path)
-    assert File.directory?(path), "#{path} should be a directory"
-  end
-
-  def assert_release_file(directory, file)
-    assert File.exists?(File.join(directory, file)), "#{file} should be in the release"
-  end
-
-  def refute_release_file(directory, file)
-    refute File.exists?(File.join(directory, file)), "#{file} should not be in the release"
-  end
-
   def read(*paths)
     File.read(File.join(*paths))
+  end
+
+  def assert_path(path)
+    assert path.exist?, "#{path} should exist"
+  end
+
+  def refute_path(path)
+    refute path.exist?, "#{path} should not exist"
   end
 end
 

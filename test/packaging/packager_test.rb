@@ -223,13 +223,5 @@ module Decks
 
       assert_equal directory.join(file_names.release), release.path
     end
-
-    def assert_path(path)
-      assert path.exist?, "#{path} should exist"
-    end
-
-    def refute_path(path)
-      refute path.exist?, "#{path} should not exist"
-    end
   end
 end
