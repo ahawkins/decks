@@ -47,7 +47,11 @@ module Decks
     attr_accessor :tracks
 
     def initialize(path)
-      @path = Pathname.new path.to_s
+      value = path.to_s
+      value.chop! if value.end_with?('/', '\\')
+
+      @path = Pathname.new value
+
       @tracks = [ ]
       @artists = [ ]
     end
