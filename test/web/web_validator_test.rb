@@ -100,6 +100,35 @@ module Decks
       refute_ok release
     end
 
+    def test_must_have_a_track_number_for_each_track
+      @release = configure do |release|
+        release.artists = 'Foo'
+        release.name = 'City Series'
+        release.year = 2010
+        release.catalogue_number = 'CH238'
+        release.format = 'WEB'
+
+        release.track 'track1.mp3' do |track|
+          track.number = 1
+          track.title = 'SF'
+          track.artist = 'Foo'
+        end
+
+        release.track 'track2.mp3' do |track|
+          track.number = 2
+          track.title = 'SD'
+          track.artist = 'Foo'
+        end
+      end
+
+      assert_ok release
+
+      release[0].number = 2
+      release[1].number = 3
+
+      refute_ok release
+    end
+
     def test_continuous_mixes_on_compilations_must_be_va
       reconfigure do |release|
         release.compilation = true

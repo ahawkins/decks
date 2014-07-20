@@ -5,7 +5,7 @@ module Decks
     end
 
     def refute_ok(release)
-      refute release.ok?, "Release should be ok: #{release.problems}"
+      refute release.ok?, "Release should be broken"
     end
   end
 end

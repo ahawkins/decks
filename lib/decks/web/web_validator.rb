@@ -30,6 +30,11 @@ module Decks
       end
 
       errors << 'Track numbers duplicated' unless tracks.uniq(&:number).size == tracks.size
+
+      (1..tracks.size).each do |number|
+        numbers = tracks.map(&:number)
+        errors << "Track #{number} missing" unless numbers.include? number
+      end
     end
 
     def validate_naming
