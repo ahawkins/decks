@@ -40,7 +40,6 @@ module Decks
     attr_accessor :catalogue_number
 
     attr_accessor :format
-    attr_accessor :cover_path
 
     attr_writer :compilation
     attr_writer :lossless
