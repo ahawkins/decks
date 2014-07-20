@@ -92,6 +92,15 @@ module Decks
       skip
     end
 
+    def test_replaces_featuring_abbreviations
+      assert_equal 'Foo_feat_Bar', sanitize('Foo feat. Bar')
+      assert_equal 'Foo_ft_Bar', sanitize('Foo ft. Bar')
+    end
+
+    def test_replaces_presents_abbrevations
+      assert_equal 'Foo_pres_Bar', sanitize('Foo pres. Bar')
+    end
+
     # ==== Special Cases Tests =====
     def test_mike_with_dots_become_mike
       assert_equal 'MIKE', sanitize('M.I.K.E.')

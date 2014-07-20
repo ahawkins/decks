@@ -6,6 +6,9 @@ module Decks
 
       copy.gsub! /['"]+/, '_'
       copy.gsub! '&', 'and'
+      copy.gsub! 'feat.', 'feat'
+      copy.gsub! 'ft.', 'ft'
+      copy.gsub! 'pres.', 'pres'
       copy.gsub! /\s+(vs\.)\s+/i, ' vs '
       copy.gsub! /[^A-Za-z0-9._\-()]+/, '_'
       copy.gsub! /_+/, '_'
