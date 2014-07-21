@@ -13,6 +13,8 @@ module Decks
         tags.year = release.year
 
         tags.compilation = release.compilation?
+
+        tags.label = release.label
       end
     end
   end

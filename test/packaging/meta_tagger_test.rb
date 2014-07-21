@@ -65,5 +65,13 @@ module Decks
 
       assert_equal 'Foo & Bar', tags.album_artist
     end
+
+    def test_sets_the_label_tag
+      release.label = 'Ultimae Records'
+
+      tags = write release[0]
+
+      assert_equal release.label, tags.label
+    end
   end
 end

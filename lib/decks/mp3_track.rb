@@ -146,6 +146,17 @@ module Decks
       frames[:compilation]
     end
 
+    def label
+      fetch :TPUB
+    end
+
+    def label=(value)
+      v = value.to_s.strip
+      return if v.empty?
+
+      execute '--TPUB', v
+    end
+
     private
     def frames
       output = encode_properly(`id3v2 -l "#{path}"`).split("\n")
